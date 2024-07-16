@@ -1,0 +1,550 @@
+{
+	"info": {
+		"_postman_id": "2e451faa-6535-4c5a-9d40-a6cbb19c577b",
+		"name": "CodeNow REST API v1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "21782812"
+	},
+	"item": [
+		{
+			"name": "account",
+			"item": [
+				{
+					"name": "login/",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": "{{host}}/account/login/",
+						"description": "authenticates credentials and returns auth token"
+					},
+					"response": []
+				},
+				{
+					"name": "achievements/",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/account/achievements/",
+						"description": "gets users achievements"
+					},
+					"response": []
+				},
+				{
+					"name": "/",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/account/",
+						"description": "gets user account details"
+					},
+					"response": []
+				},
+				{
+					"name": "logout/",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{host}}/account/logout/",
+						"description": "unauthenticates user"
+					},
+					"response": []
+				},
+				{
+					"name": "register/",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "nxabdullah",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "nxabdullah1@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "Password",
+									"type": "text"
+								}
+							]
+						},
+						"url": "{{host}}/account/register/",
+						"description": "creates a user"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints related to user creation and authentication.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Problems",
+			"item": [
+				{
+					"name": "categories/",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/problems/categories/",
+						"description": "Get all problem categories.  \n  \nNOTE: Problem categories are created automatically when you add a problem."
+					},
+					"response": []
+				},
+				{
+					"name": "categories/<id>",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/problems/categories/1",
+						"description": "Get problems by category id"
+					},
+					"response": []
+				},
+				{
+					"name": "problems/",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/problems/",
+						"description": "Get all problems"
+					},
+					"response": []
+				},
+				{
+					"name": "problem/<id>",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/problems/1",
+						"description": "Get a problem by problem id"
+					},
+					"response": []
+				},
+				{
+					"name": "<pid>/attempts/",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/problems/1/attempts/",
+						"description": "Get all problem attempts from user  \nrequires authentication"
+					},
+					"response": []
+				},
+				{
+					"name": "<pid>/attempts/<aid>",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/problems/1/attempts/123",
+						"description": "Get a problem attempt details by id  \nrequires authentication"
+					},
+					"response": []
+				},
+				{
+					"name": "recommended/",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/problems/recommended/",
+						"description": "Gets the recommended problems that user should try  \nrequires authentication"
+					},
+					"response": []
+				},
+				{
+					"name": "recommended/category/",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/problems/recommended/category/",
+						"description": "Get the recommended problem categories for user  \nrequires authentication"
+					},
+					"response": []
+				},
+				{
+					"name": "behavioral_problems/",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/problems/behavioral_problems/",
+						"description": "Gets all behavioural problems \\[deprecated\\]"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints related to algorithm problems (including behavioural problems, which will be omitted)."
+		},
+		{
+			"name": "confidence",
+			"item": [
+				{
+					"name": "skill_assessment/",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/confidence/skill_assessment/",
+						"description": "Gets all of the confidence levels of the user by category."
+					},
+					"response": []
+				},
+				{
+					"name": "skill_assessment/",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "{{host}}/confidence/skill_assessment/",
+						"description": "Update user confidence level for ALL problem categories. input requires all categories, this is a one time use endpoint (on account creation)."
+					},
+					"response": []
+				}
+			],
+			"description": "endpoint related to users confidence level with problem categories."
+		},
+		{
+			"name": "achievements",
+			"item": [
+				{
+					"name": "add-achievement/",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{host}}/achievements/add-achievement/"
+					},
+					"response": []
+				},
+				{
+					"name": "list-achievement/",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/achievements/list-achievement/"
+					},
+					"response": []
+				}
+			],
+			"description": "endpoint related to user achiements but for now just returns hardcoded data.\n\nNote that this actually depends on the user, and will give a 500 if you try it without authentication.\n\n\\[Deprecated\\]"
+		},
+		{
+			"name": "SETUP",
+			"item": [
+				{
+					"name": "1. Seed problems",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const array_easies = [",
+									"    {",
+									"        \"name\": \"Single Number\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/single-number/\",",
+									"        \"difficulty\": \"EASY\",",
+									"        \"categories\": [{\"name\": \"arrays\"}]",
+									"    },",
+									"    {",
+									"        \"name\": \"Contains Duplicate\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/contains-duplicate/\",",
+									"        \"difficulty\": \"EASY\",",
+									"        \"categories\": [{\"name\": \"arrays\"}]",
+									"    }",
+									"];",
+									"",
+									"const array_mediums = [",
+									"    {",
+									"        \"name\": \"Container With Most Water\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/container-with-most-water/\",",
+									"        \"difficulty\": \"MEDIUM\",",
+									"        \"categories\": [{\"name\": \"arrays\"}]",
+									"    },",
+									"    {",
+									"        \"name\": \"Group Anagrams\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/group-anagrams/\",",
+									"        \"difficulty\": \"MEDIUM\",",
+									"        \"categories\": [{\"name\": \"arrays\"}]",
+									"    }",
+									"];",
+									"",
+									"const array_hards = [",
+									"    {",
+									"        \"name\": \"Sliding Window Maximum\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/sliding-window-maximum/\",",
+									"        \"difficulty\": \"HARD\",",
+									"        \"categories\": [{\"name\": \"arrays\"}]",
+									"    },",
+									"    {",
+									"        \"name\": \"Minimum Window Substring\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/minimum-window-substring/\",",
+									"        \"difficulty\": \"HARD\",",
+									"        \"categories\": [{\"name\": \"arrays\"}]",
+									"    }",
+									"];",
+									"",
+									"const trees_easies = [",
+									"    {",
+									"        \"name\": \"Invert Binary Tree\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/invert-binary-tree/\",",
+									"        \"difficulty\": \"EASY\",",
+									"        \"categories\": [{\"name\": \"trees\"}]",
+									"    },",
+									"    {",
+									"        \"name\": \"Maximum Depth of Binary Tree\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/maximum-depth-of-binary-tree/\",",
+									"        \"difficulty\": \"EASY\",",
+									"        \"categories\": [{\"name\": \"trees\"}]",
+									"    },",
+									"    {",
+									"        \"name\": \"Diameter of Binary Tree\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/diameter-of-binary-tree/\",",
+									"        \"difficulty\": \"EASY\",",
+									"        \"categories\": [{\"name\": \"trees\"}]",
+									"    }",
+									"];",
+									"",
+									"const trees_mediums = [",
+									"    {",
+									"        \"name\": \"Count Good Nodes in Binary Tree\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/count-good-nodes-in-binary-tree/\",",
+									"        \"difficulty\": \"MEDIUM\",",
+									"        \"categories\": [{\"name\": \"trees\"}]",
+									"    },",
+									"    {",
+									"        \"name\": \"Binary Tree Level Order Traversal\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/binary-tree-level-order-traversal/\",",
+									"        \"difficulty\": \"MEDIUM\",",
+									"        \"categories\": [{\"name\": \"trees\"}]",
+									"    }",
+									"];",
+									"",
+									"const trees_hards = [",
+									"    {",
+									"        \"name\": \"Binary Tree Maximum Path Sum\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/binary-tree-maximum-path-sum/\",",
+									"        \"difficulty\": \"HARD\",",
+									"        \"categories\": [{\"name\": \"trees\"}]",
+									"    },",
+									"    {",
+									"        \"name\": \"Serialize and Deserialize Binary Tree\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/serialize-and-deserialize-binary-tree/\",",
+									"        \"difficulty\": \"HARD\",",
+									"        \"categories\": [{\"name\": \"trees\"}]",
+									"    }",
+									"];",
+									"",
+									"const linked_lists_easies = [",
+									"    {",
+									"        \"name\": \"Merge Two Sorted Lists\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/merge-two-sorted-lists/\",",
+									"        \"difficulty\": \"EASY\",",
+									"        \"categories\": [{\"name\": \"linked lists\"}]",
+									"    },",
+									"    {",
+									"        \"name\": \"Reverse linked lists\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/reverse-linked-list/\",",
+									"        \"difficulty\": \"EASY\",",
+									"        \"categories\": [{\"name\": \"linked lists\"}]",
+									"    }",
+									"];",
+									"",
+									"const linked_lists_mediums = [",
+									"    {",
+									"        \"name\": \"Reorder List\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/reorder-list/\",",
+									"        \"difficulty\": \"MEDIUM\",",
+									"        \"categories\": [{\"name\": \"linked lists\"}]",
+									"    },",
+									"    {",
+									"        \"name\": \"Copy List with Random Pointer\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/copy-list-with-random-pointer/\",",
+									"        \"difficulty\": \"MEDIUM\",",
+									"        \"categories\": [{\"name\": \"linked lists\"}]",
+									"    }",
+									"];",
+									"",
+									"const linked_lists_hards = [",
+									"    {",
+									"        \"name\": \"Merge k Sorted Lists\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/merge-k-sorted-lists/\",",
+									"        \"difficulty\": \"HARD\",",
+									"        \"categories\": [{\"name\": \"linked lists\"}]",
+									"    },",
+									"    {",
+									"        \"name\": \"Reverse Nodes in k-Group\",",
+									"        \"leetcode_url\": \"https://leetcode.com/problems/reverse-nodes-in-k-group/\",",
+									"        \"difficulty\": \"HARD\",",
+									"        \"categories\": [{\"name\": \"linked lists\"}]",
+									"    }",
+									"];",
+									"",
+									"const problems = [].concat(",
+									"    array_easies, array_mediums, array_hards,",
+									"    trees_easies, trees_mediums, trees_hards,",
+									"    linked_lists_easies, linked_lists_mediums, linked_lists_hards",
+									");",
+									"",
+									"problems.forEach(problem => {",
+									"    pm.sendRequest({",
+									"        url: pm.environment.get(\"host\") + \"/problems/\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'Content-Type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify(problem)",
+									"        }",
+									"    }, function (err, res) {",
+									"        if (err) {",
+									"            console.log(`Error submitting ${problem.name}: ${err}`);",
+									"        } else if (res.status !== 201) {",
+									"            console.log(`Error submitting ${problem.name}: ${res.status}`);",
+									"            console.log(res.text());",
+									"        } else {",
+									"            console.log(`${problem.name} submitted successfully`);",
+									"        }",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{host}}/problems/",
+						"description": "Adds sample problem data."
+					},
+					"response": []
+				}
+			],
+			"description": "Collection to help setup api with sample data."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"const loginRequest = {",
+					"    url: pm.environment.get(\"host\") + \"/account/login/\",",
+					"    method: 'POST',",
+					"    header: {",
+					"        'Content-Type': 'application/json'",
+					"    },",
+					"    body: {",
+					"        mode: 'raw',",
+					"        raw: JSON.stringify({",
+					"            username: pm.environment.get(\"username\"),",
+					"            password: pm.environment.get(\"password\")",
+					"        })",
+					"    }",
+					"};",
+					"",
+					"// Send the login request",
+					"pm.sendRequest(loginRequest, function (err, res) {",
+					"    if (err) {",
+					"        console.log(`Login error: ${err}`);",
+					"    } else if (res.status !== \"OK\") {",
+					"        console.log(`Login failed with status: ${res.status}`);",
+					"        console.log(res.text());",
+					"    } else {",
+					"        const responseJson = res.json();",
+					"        const token = responseJson.token;",
+					"        if (token) {",
+					"            // Set the Authorization header for the request",
+					"            pm.environment.set(\"token\", token);",
+					"            pm.request.headers.add({",
+					"                key: 'Authorization',",
+					"                value: `Token ${token}`",
+					"            });",
+					"            console.log(`Token ${token} set successfully`);",
+					"        } else {",
+					"            console.log('Token not found in the login response');",
+					"        }",
+					"    }",
+					"});",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
