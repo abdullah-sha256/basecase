@@ -1,3 +1,10 @@
+const Shared = {
+  APP_NAME: "Code Now",
+  NAVBAR_SIGN_IN_BUTTON_TEXT: "Sign in",
+  NAVBAR_SIGN_UP_BUTTON_TEXT: "Sign up",
+  FOOTER_TEXT: "© 2024 Code Now. All rights reserved",
+};
+
 const LandingRoute = {
   LANDING_ROUTE_HERO_SECTION_PRIMARY_HEADER: "Ready to Code Now?",
   LANDING_ROUTE_HERO_SECTION_SECONDARY_HEADER:
@@ -20,5 +27,6 @@ const LandingRoute = {
 };
 
 export const messages = {
+  ...Shared,
   ...LandingRoute,
 };

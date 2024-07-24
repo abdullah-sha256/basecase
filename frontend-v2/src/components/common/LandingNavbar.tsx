@@ -20,6 +20,7 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from "@chakra-ui/icons";
+import { messages } from "../../locale/en-CA";
 
 interface INavItem {
   label: string;
@@ -67,7 +68,7 @@ export default function LandingNavbar() {
             color={useColorModeValue("gray.800", "white")}
             fontWeight={700}
           >
-            Code Now
+            {messages.APP_NAME}
           </Text>
 
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
@@ -88,7 +89,7 @@ export default function LandingNavbar() {
             variant={"link"}
             href={"#"}
           >
-            Sign In
+            {messages.NAVBAR_SIGN_IN_BUTTON_TEXT}
           </Button>
           <Button
             as={"a"}
@@ -102,7 +103,7 @@ export default function LandingNavbar() {
               bg: "red.300",
             }}
           >
-            Sign Up
+            {messages.NAVBAR_SIGN_UP_BUTTON_TEXT}
           </Button>
         </Stack>
       </Flex>
