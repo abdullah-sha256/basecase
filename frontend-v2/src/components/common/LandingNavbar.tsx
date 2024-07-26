@@ -21,6 +21,7 @@ import {
   ChevronRightIcon,
 } from "@chakra-ui/icons";
 import { messages } from "../../locale/en-CA";
+import { useModalStore } from "../../hooks/useModalStore";
 
 interface INavItem {
   label: string;
@@ -87,7 +88,7 @@ export default function LandingNavbar() {
             fontSize={"sm"}
             fontWeight={400}
             variant={"link"}
-            href={"#"}
+            onClick={useModalStore((state) => state.openLoginModal)}
           >
             {messages.NAVBAR_SIGN_IN_BUTTON_TEXT}
           </Button>
