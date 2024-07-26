@@ -6,21 +6,45 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Input,
   useColorModeValue,
   Box,
   Stack,
   Checkbox,
-  Text,
   Heading,
 } from "@chakra-ui/react";
 import React from "react";
 import { useModalStore } from "../../../hooks/useModalStore";
+import { FormField, IFormFieldProps } from "../../common/FormField";
+import { useForm } from "react-hook-form";
+
+type TLoginFormData = {
+  email: string;
+  password: string;
+};
+
+type TLoginFormFieldNames = "email" | "password";
+
+const LoginFormField = (
+  props: Omit<IFormFieldProps<TLoginFormFieldNames, TLoginFormData>, "name"> & {
+    name: TLoginFormFieldNames;
+  }
+) => <FormField<TLoginFormFieldNames, TLoginFormData> {...props} />;
 
 export function LoginModal() {
   const isModalOpen = useModalStore((state) => state.isLoginModalOpen);
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<TLoginFormData>();
+
+  const onSubmit = async (data: TLoginFormData) => {
+    console.log("Login submit success:", data);
+  };
 
   return (
     <>
@@ -40,16 +64,28 @@ export function LoginModal() {
               p={8}
             >
               <Heading size={"md"} marginBottom={8}>
-                Sign in to your account{" "}
+                Sign in to your account
               </Heading>
               <Stack spacing={4}>
                 <FormControl id="email">
                   <FormLabel>Email address</FormLabel>
-                  <Input type="email" />
+                  <LoginFormField
+                    type="email"
+                    placeholder="Email"
+                    name="email"
+                    register={register}
+                    error={errors.email}
+                  />
                 </FormControl>
                 <FormControl id="password">
                   <FormLabel>Password</FormLabel>
-                  <Input type="password" />
+                  <LoginFormField
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    register={register}
+                    error={errors.password}
+                  />
                 </FormControl>
                 <Stack spacing={10}>
                   <Stack
@@ -58,7 +94,6 @@ export function LoginModal() {
                     justify={"space-between"}
                   >
                     <Checkbox>Remember me</Checkbox>
-                    <Text color={"blue.400"}>Forgot password?</Text>
                   </Stack>
                   <Button
                     bg={"red.500"}
@@ -66,6 +101,7 @@ export function LoginModal() {
                     _hover={{
                       bg: "red.400",
                     }}
+                    onClick={handleSubmit(onSubmit)}
                   >
                     Sign in
                   </Button>
