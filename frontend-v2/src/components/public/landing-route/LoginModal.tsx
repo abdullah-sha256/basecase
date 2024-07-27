@@ -4,8 +4,6 @@ import {
   ModalContent,
   ModalBody,
   Button,
-  FormControl,
-  FormLabel,
   useColorModeValue,
   Box,
   Stack,
@@ -16,6 +14,8 @@ import React from "react";
 import { useModalStore } from "../../../hooks/useModalStore";
 import { FormField, IFormFieldProps } from "../../common/FormField";
 import { useForm } from "react-hook-form";
+import { z, ZodType } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type TLoginFormData = {
   email: string;
@@ -24,6 +24,15 @@ type TLoginFormData = {
 
 type TLoginFormFieldNames = "email" | "password";
 
+const loginSchema: ZodType<TLoginFormData> = z.object({
+  email: z.string().email({ message: "Please enter a valid email." }),
+  password: z.string().min(1, { message: "Please enter a password." }),
+});
+
+/**
+ * Wrapper component for FormField to ensure typesafety with
+ * login fields.
+ */
 const LoginFormField = (
   props: Omit<IFormFieldProps<TLoginFormFieldNames, TLoginFormData>, "name"> & {
     name: TLoginFormFieldNames;
@@ -39,8 +48,9 @@ export function LoginModal() {
     register,
     handleSubmit,
     formState: { errors },
-    setError,
-  } = useForm<TLoginFormData>();
+  } = useForm<TLoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
 
   const onSubmit = async (data: TLoginFormData) => {
     console.log("Login submit success:", data);
@@ -67,26 +77,22 @@ export function LoginModal() {
                 Sign in to your account
               </Heading>
               <Stack spacing={4}>
-                <FormControl id="email">
-                  <FormLabel>Email address</FormLabel>
-                  <LoginFormField
-                    type="email"
-                    placeholder="Email"
-                    name="email"
-                    register={register}
-                    error={errors.email}
-                  />
-                </FormControl>
-                <FormControl id="password">
-                  <FormLabel>Password</FormLabel>
-                  <LoginFormField
-                    type="password"
-                    placeholder="Password"
-                    name="password"
-                    register={register}
-                    error={errors.password}
-                  />
-                </FormControl>
+                <LoginFormField
+                  type="email"
+                  placeholder="Email"
+                  name="email"
+                  register={register}
+                  error={errors.email}
+                  label="Email address"
+                />
+                <LoginFormField
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  register={register}
+                  error={errors.password}
+                  label="Password"
+                />
                 <Stack spacing={10}>
                   <Stack
                     direction={{ base: "column", sm: "row" }}
