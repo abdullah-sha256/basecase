@@ -16,17 +16,23 @@ import { FormField, IFormFieldProps } from "../../common/FormField";
 import { useForm } from "react-hook-form";
 import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { messages } from "../../../locale/en-CA";
+import codeNowApi from "../../../apis/codeNowApi";
 
-type TLoginFormData = {
-  email: string;
+export type TLoginFormData = {
+  username: string;
   password: string;
 };
 
-type TLoginFormFieldNames = "email" | "password";
+type TLoginFormFieldNames = "username" | "password";
 
 const loginSchema: ZodType<TLoginFormData> = z.object({
-  email: z.string().email({ message: "Please enter a valid email." }),
-  password: z.string().min(1, { message: "Please enter a password." }),
+  username: z.string().min(1, {
+    message: messages.LOGIN_MODAL_USERNAME_FIELD_EMPTY_USERNAME_TEXT,
+  }),
+  password: z.string().min(1, {
+    message: messages.LOGIN_MODAL_PASSWORD_FIELD_EMPTY_PASSWORD_TEXT,
+  }),
 });
 
 /**
@@ -53,7 +59,8 @@ export function LoginModal() {
   });
 
   const onSubmit = async (data: TLoginFormData) => {
-    console.log("Login submit success:", data);
+    const temp = await codeNowApi.Account.login(data);
+    console.log(temp);
   };
 
   return (
@@ -74,24 +81,24 @@ export function LoginModal() {
               p={8}
             >
               <Heading size={"md"} marginBottom={8}>
-                Sign in to your account
+                {messages.LOGIN_MODAL_HEADING}
               </Heading>
               <Stack spacing={4}>
                 <LoginFormField
-                  type="email"
-                  placeholder="Email"
-                  name="email"
+                  type="text"
+                  placeholder={messages.LOGIN_MODAL_USERNAME_FIELD_PLACEHOLDER}
+                  name="username"
                   register={register}
-                  error={errors.email}
-                  label="Email address"
+                  error={errors.username}
+                  label={messages.LOGIN_MODAL_USERNAME_FIELD_LABEL}
                 />
                 <LoginFormField
                   type="password"
-                  placeholder="Password"
+                  placeholder={messages.LOGIN_MODAL_PASSWORD_FIELD_PLACEHOLDER}
                   name="password"
                   register={register}
                   error={errors.password}
-                  label="Password"
+                  label={messages.LOGIN_MODAL_PASSWORD_FIELD_LABEL}
                 />
                 <Stack spacing={10}>
                   <Stack
@@ -109,7 +116,7 @@ export function LoginModal() {
                     }}
                     onClick={handleSubmit(onSubmit)}
                   >
-                    Sign in
+                    {messages.LOGIN_MODAL_SIGN_IN_BUTTON_TEXT}
                   </Button>
                 </Stack>
               </Stack>

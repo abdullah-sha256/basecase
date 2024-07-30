@@ -26,7 +26,19 @@ const LandingRoute = {
   LANDING_ROUTE_FEATURE_CARD_LEARN_MORE_TEXT: "Learn more",
 };
 
+const LoginModal = {
+  LOGIN_MODAL_HEADING: "Sign in to your account",
+  LOGIN_MODAL_SIGN_IN_BUTTON_TEXT: "Sign in",
+  LOGIN_MODAL_USERNAME_FIELD_LABEL: "Username",
+  LOGIN_MODAL_USERNAME_FIELD_PLACEHOLDER: "Username",
+  LOGIN_MODAL_USERNAME_FIELD_EMPTY_USERNAME_TEXT: "Please enter a username.",
+  LOGIN_MODAL_PASSWORD_FIELD_LABEL: "Password",
+  LOGIN_MODAL_PASSWORD_FIELD_PLACEHOLDER: "Password",
+  LOGIN_MODAL_PASSWORD_FIELD_EMPTY_PASSWORD_TEXT: "Please enter a password.",
+};
+
 export const messages = {
   ...Shared,
   ...LandingRoute,
+  ...LoginModal,
 };
