@@ -9,6 +9,8 @@ import {
   Stack,
   Checkbox,
   Heading,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import React from "react";
 import { useModalStore } from "../../../hooks/useModalStore";
@@ -17,7 +19,8 @@ import { useForm } from "react-hook-form";
 import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { messages } from "../../../locale/en-CA";
-import codeNowApi from "../../../apis/codeNowApi";
+import { useLoginMutation } from "../../../hooks/useLoginMutation";
+import { useAppStore } from "../../../hooks/useAppStore";
 
 export type TLoginFormData = {
   username: string;
@@ -45,10 +48,12 @@ const LoginFormField = (
   }
 ) => <FormField<TLoginFormFieldNames, TLoginFormData> {...props} />;
 
-export function LoginModal() {
-  const isModalOpen = useModalStore((state) => state.isLoginModalOpen);
+export const LoginModal = () => {
+  const modalStore = useModalStore();
+  const appStore = useAppStore();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
+  const loginMutation = useLoginMutation();
 
   const {
     register,
@@ -58,18 +63,29 @@ export function LoginModal() {
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: TLoginFormData) => {
-    const temp = await codeNowApi.Account.login(data);
-    console.log(temp);
+  const onSubmit = async (loginFormData: TLoginFormData) => {
+    loginMutation.mutate(loginFormData);
   };
+
+  const errorMessages = loginMutation.error?.response?.data.non_field_errors;
+
+  const closeModal = () => {
+    if (!appStore.shouldRetryAuth) {
+      modalStore.closeLoginModal();
+    }
+  };
+
+  const modalTitle = appStore.shouldRetryAuth
+    ? messages.LOGIN_MODAL_RETRY_HEADING
+    : messages.LOGIN_MODAL_STANDARD_HEADING;
 
   return (
     <>
       <Modal
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
-        isOpen={isModalOpen}
-        onClose={useModalStore((state) => state.closeLoginModal)}
+        isOpen={modalStore.isLoginModalOpen}
+        onClose={closeModal}
         size={"lg"}
       >
         <ModalOverlay />
@@ -80,9 +96,23 @@ export function LoginModal() {
               bg={useColorModeValue("white", "gray.700")}
               p={8}
             >
-              <Heading size={"md"} marginBottom={8}>
-                {messages.LOGIN_MODAL_HEADING}
+              <Heading size={"sm"} marginBottom={4}>
+                {modalTitle}
               </Heading>
+              {loginMutation.isSuccess && (
+                <Alert status="success" marginBottom={4}>
+                  <AlertIcon />
+                  You have been successfully logged in.
+                </Alert>
+              )}
+              {loginMutation.isError && (
+                <Alert status="error" marginBottom={4}>
+                  <AlertIcon />
+                  {errorMessages?.map((errorMessage: string, index: number) => (
+                    <div key={"login-error-" + index}>{errorMessage}</div>
+                  ))}
+                </Alert>
+              )}
               <Stack spacing={4}>
                 <LoginFormField
                   type="text"
@@ -114,6 +144,7 @@ export function LoginModal() {
                     _hover={{
                       bg: "red.400",
                     }}
+                    isLoading={loginMutation.isPending}
                     onClick={handleSubmit(onSubmit)}
                   >
                     {messages.LOGIN_MODAL_SIGN_IN_BUTTON_TEXT}
@@ -126,4 +157,4 @@ export function LoginModal() {
       </Modal>
     </>
   );
-}
+};

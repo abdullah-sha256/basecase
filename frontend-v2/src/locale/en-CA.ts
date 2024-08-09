@@ -27,7 +27,8 @@ const LandingRoute = {
 };
 
 const LoginModal = {
-  LOGIN_MODAL_HEADING: "Sign in to your account",
+  LOGIN_MODAL_STANDARD_HEADING: "Sign in to your account",
+  LOGIN_MODAL_RETRY_HEADING: "Uh oh. You were logged out, please login again.",
   LOGIN_MODAL_SIGN_IN_BUTTON_TEXT: "Sign in",
   LOGIN_MODAL_USERNAME_FIELD_LABEL: "Username",
   LOGIN_MODAL_USERNAME_FIELD_PLACEHOLDER: "Username",

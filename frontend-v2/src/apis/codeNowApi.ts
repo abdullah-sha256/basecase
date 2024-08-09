@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import {
+  IUserDetails,
   IUserLoginFailureResponse,
   IUserLoginSuccessResponse,
 } from "../models/account";
@@ -10,7 +11,7 @@ axios.defaults.baseURL = import.meta.env.VITE_CODENOW_API_URL;
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
 const getHeaders = (token?: string) => ({
-  headers: { Authorization: token ? `Bearer ${token}` : "" },
+  headers: { Authorization: token ? `Token ${token}` : "" },
 });
 
 const requests = {
@@ -20,18 +21,20 @@ const requests = {
     axios.post<T>(url, body, getHeaders(token)).then(responseBody),
   put: <T, V>(url: string, body: V, token: string) =>
     axios.put<T>(url, body, getHeaders(token)).then(responseBody),
-  del: <T>(url: string, token: string) =>
+  del: <T>(url: string, token?: string) =>
     axios.delete<T>(url, getHeaders(token)).then(responseBody),
 };
 
 const Account = {
-  login: (
-    loginFormData: TLoginFormData
-  ): Promise<IUserLoginSuccessResponse | IUserLoginFailureResponse> =>
+  login: (loginFormData: TLoginFormData): Promise<IUserLoginSuccessResponse> =>
     requests.post<IUserLoginSuccessResponse, TLoginFormData>(
       "/account/login/",
       loginFormData
     ),
+  logout: (token?: string): Promise<void> =>
+    requests.del<void>("/account/logout/", token),
+  details: (token?: string): Promise<IUserDetails> =>
+    requests.get<IUserDetails>("/account/", token),
 };
 
 const codeNowApi = {
