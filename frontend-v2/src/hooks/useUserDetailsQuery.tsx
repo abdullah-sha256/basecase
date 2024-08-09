@@ -4,6 +4,14 @@ import { AxiosError } from "axios";
 import codeNowApi from "../apis/codeNowApi";
 import { useAuth } from "./useAuth";
 
+/**
+ * Custom hook for fetching user details using React Query.
+ *
+ * @remarks
+ * The query is enabled only if an authentication token is present.
+ *
+ * @returns {UseQueryResult<IUserDetails, AxiosError>}
+ */
 export const useUserDetailsQuery = (): UseQueryResult<
   IUserDetails,
   AxiosError

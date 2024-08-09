@@ -5,6 +5,11 @@ import { AxiosError } from "axios";
 import { useAuth } from "./useAuth";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Custom hook for handling user logout via a mutation.
+ *
+ * @returns
+ */
 export const useLogoutMutation = (): UseMutationResult<
   void,
   AxiosError<IUserLogoutFailureResponse>,

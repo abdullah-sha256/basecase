@@ -4,6 +4,11 @@ import { useAuth } from "../../hooks/useAuth";
 import { useAppStore } from "../../hooks/useAppStore";
 import ProtectedNavbar from "../../components/common/ProtectedNavbar";
 
+/**
+ * Wrapper component for protecting routes that require authentication.
+ *
+ * @returns
+ */
 export const ProtectedRoute = (props: {
   children: ReactElement;
 }): ReactElement => {

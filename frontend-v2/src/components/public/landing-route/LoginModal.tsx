@@ -22,13 +22,31 @@ import { messages } from "../../../locale/en-CA";
 import { useLoginMutation } from "../../../hooks/useLoginMutation";
 import { useAppStore } from "../../../hooks/useAppStore";
 
+/**
+ * Type for login form data.
+ *
+ * @property {string} username - The username entered by the user.
+ * @property {string} password - The password entered by the user.
+ */
 export type TLoginFormData = {
   username: string;
   password: string;
 };
 
+/**
+ * Type for login form field names.
+ *
+ * @remarks
+ * This type ensures that only valid field names can be used in the form.
+ */
 type TLoginFormFieldNames = "username" | "password";
 
+/**
+ * Zod schema for validating the login form data.
+ *
+ * @remarks
+ * This schema ensures that both the username and password are not empty.
+ */
 const loginSchema: ZodType<TLoginFormData> = z.object({
   username: z.string().min(1, {
     message: messages.LOGIN_MODAL_USERNAME_FIELD_EMPTY_USERNAME_TEXT,
@@ -48,13 +66,20 @@ const LoginFormField = (
   }
 ) => <FormField<TLoginFormFieldNames, TLoginFormData> {...props} />;
 
+/**
+ * LoginModal component for rendering the login modal with form handling.
+ *
+ * @remarks
+ * This component manages the login form submission, form validation, and displays success or error messages based on the login attempt.
+ *
+ * @returns {React.ReactElement} - A React element representing the login modal.
+ */
 export const LoginModal = () => {
   const modalStore = useModalStore();
   const appStore = useAppStore();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
   const loginMutation = useLoginMutation();
-
   const {
     register,
     handleSubmit,
@@ -67,13 +92,13 @@ export const LoginModal = () => {
     loginMutation.mutate(loginFormData);
   };
 
-  const errorMessages = loginMutation.error?.response?.data.non_field_errors;
-
   const closeModal = () => {
     if (!appStore.shouldRetryAuth) {
       modalStore.closeLoginModal();
     }
   };
+
+  const errorMessages = loginMutation.error?.response?.data.non_field_errors;
 
   const modalTitle = appStore.shouldRetryAuth
     ? messages.LOGIN_MODAL_RETRY_HEADING
@@ -102,7 +127,7 @@ export const LoginModal = () => {
               {loginMutation.isSuccess && (
                 <Alert status="success" marginBottom={4}>
                   <AlertIcon />
-                  You have been successfully logged in.
+                  {messages.LOGIN_MODAL_SUCCESS_TEXT}
                 </Alert>
               )}
               {loginMutation.isError && (

@@ -102,7 +102,7 @@ export default function ProtectedNavbar() {
               onClick={onLogoutClick}
               disabled={logoutMutation.isPending}
             >
-              Log out
+              {messages.PROTECTED_NAVBAR_LOGOUT_BUTTON_TEXT}
             </Button>
           </Stack>
         </Flex>

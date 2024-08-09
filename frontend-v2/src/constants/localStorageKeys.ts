@@ -1,1 +1,5 @@
-export const localStorageAuthKey = "authToken";
+const localStorageKeys = {
+  authToken: "authToken",
+};
+
+export { localStorageKeys };

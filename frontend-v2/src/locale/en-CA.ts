@@ -3,6 +3,7 @@ const Shared = {
   NAVBAR_SIGN_IN_BUTTON_TEXT: "Sign in",
   NAVBAR_SIGN_UP_BUTTON_TEXT: "Sign up",
   FOOTER_TEXT: "© 2024 Code Now. All rights reserved",
+  PROTECTED_NAVBAR_LOGOUT_BUTTON_TEXT: "Log out",
 };
 
 const LandingRoute = {
@@ -36,6 +37,7 @@ const LoginModal = {
   LOGIN_MODAL_PASSWORD_FIELD_LABEL: "Password",
   LOGIN_MODAL_PASSWORD_FIELD_PLACEHOLDER: "Password",
   LOGIN_MODAL_PASSWORD_FIELD_EMPTY_PASSWORD_TEXT: "Please enter a password.",
+  LOGIN_MODAL_SUCCESS_TEXT: "You have been successfully logged in.",
 };
 
 export const messages = {

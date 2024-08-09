@@ -6,12 +6,16 @@ import {
 } from "../models/account";
 import { TLoginFormData } from "../components/public/landing-route/LoginModal";
 import { AxiosError } from "axios";
-import { useLocalStorage } from "usehooks-ts";
-import { localStorageAuthKey } from "../constants/localStorageKeys";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useModalStore } from "./useModalStore";
 import { protectedRoutes } from "../constants/routes";
+import { useAuth } from "./useAuth";
 
+/**
+ * Custom hook for handling user login via a mutation.
+ *
+ * @returns
+ */
 export const useLoginMutation = (): UseMutationResult<
   IUserLoginSuccessResponse,
   AxiosError<IUserLoginFailureResponse>,
@@ -21,10 +25,7 @@ export const useLoginMutation = (): UseMutationResult<
   const location = useLocation();
   const navigate = useNavigate();
   const modalStore = useModalStore();
-  const [_, setAuthTokenInLocalStorage] = useLocalStorage<string | null>(
-    localStorageAuthKey,
-    null
-  );
+  const auth = useAuth();
 
   return useMutation<
     IUserLoginSuccessResponse,
@@ -34,7 +35,7 @@ export const useLoginMutation = (): UseMutationResult<
   >({
     mutationFn: codeNowApi.Account.login,
     onSuccess: (data: IUserLoginSuccessResponse) => {
-      setAuthTokenInLocalStorage(data.token);
+      auth.setAuthToken(data.token);
       modalStore.closeLoginModal();
 
       // Send them back to the page they tried to visit when they were
