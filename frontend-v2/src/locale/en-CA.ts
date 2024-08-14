@@ -40,8 +40,45 @@ const LoginModal = {
   LOGIN_MODAL_SUCCESS_TEXT: "You have been successfully logged in.",
 };
 
+const Problems = {
+  PROBLEMS_TABLE_PROBLEM_HEADER: "Problem",
+  PROBLEMS_TABLE_DIFFICULTY_HEADER: "Difficulty",
+  PROBLEMS_TABLE_CONFIDENCE_HEADER: "Confidence",
+  PROBLEMS_TABLE_LAST_ATTEMPTED_HEADER: "Last Attempted",
+  PROBLEMS_TABLE_ACTION_HEADER: "Action",
+  PROBLEMS_TABLE_ACTION_BUTTON_ATTEMPT: "Attempt",
+  PROBLEMS_TABLE_ACTION_BUTTON_RESUME: "Resume",
+  PROBLEMS_TABLE_DIFFICULTY_EASY: "Easy",
+  PROBLEMS_TABLE_DIFFICULTY_MEDIUM: "Medium",
+  PROBLEMS_TABLE_DIFFICULTY_HARD: "Hard",
+  PROBLEMS_CONTAINER_COMPLETED_COUNT: "(0 / {total})",
+};
+
+const Patterns = {
+  PATTERN_LABEL_ARRAYS_HASHING: "Arrays and Hashing",
+  PATTERN_LABEL_TWO_POINTERS: "Two Pointers",
+  PATTERN_LABEL_SLIDING_WINDOW: "Sliding Window",
+  PATTERN_LABEL_STACK: "Stack",
+  PATTERN_LABEL_BINARY_SEARCH: "Binary Search",
+  PATTERN_LABEL_LINKED_LIST: "Linked List",
+  PATTERN_LABEL_TREES: "Trees",
+  PATTERN_LABEL_HEAP_PQ: "Heap / Priority Queue",
+  PATTERN_LABEL_BACKTRACKING: "Backtracking",
+  PATTERN_LABEL_TRIES: "Tries",
+  PATTERN_LABEL_GRAPHS: "Graphs",
+  PATTERN_LABEL_ADVANCED_GRAPHS: "Advanced Graphs",
+  PATTERN_LABEL_DYNAMIC_1D: "1-D Dynamic Programming",
+  PATTERN_LABEL_DYNAMIC_2D: "2-D Dynamic Programming",
+  PATTERN_LABEL_GREEDY: "Greedy",
+  PATTERN_LABEL_INTERVALS: "Intervals",
+  PATTERN_LABEL_MATH_GEOMETRY: "Math and Geometry",
+  PATTERN_LABEL_BIT_MANIPULATION: "Bit Manipulation",
+};
+
 export const messages = {
   ...Shared,
   ...LandingRoute,
   ...LoginModal,
+  ...Problems,
+  ...Patterns,
 };

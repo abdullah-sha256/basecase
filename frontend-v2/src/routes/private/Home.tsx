@@ -1,17 +1,16 @@
-import { Box } from "@chakra-ui/react";
-import { useUserDetailsQuery } from "../../hooks/useUserDetailsQuery";
+import { Box, Container, Heading } from "@chakra-ui/react";
+import { ProblemsContainer } from "./ProblemsContainer";
 
 export const HomeRoute = () => {
-  const userQuery = useUserDetailsQuery();
-
-  if (userQuery.isLoading || userQuery.isError) {
-    return <></>;
-  }
-
   return (
     <>
-      <Box as="section" bg="bg.surface">
-        Hello, {userQuery.data?.username}!
+      <Box as="section" bg="bg.surface" marginBottom={20}>
+        <Container marginTop={20}>
+          <Heading size={"md"} marginBottom={8}>
+            All Problems
+          </Heading>
+          <ProblemsContainer />
+        </Container>
       </Box>
     </>
   );
