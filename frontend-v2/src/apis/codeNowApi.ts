@@ -1,10 +1,7 @@
 import axios, { AxiosResponse } from "axios";
-import {
-  IUserDetails,
-  IUserLoginFailureResponse,
-  IUserLoginSuccessResponse,
-} from "../models/account";
+import { IUserDetails, IUserLoginSuccessResponse } from "../models/account";
 import { TLoginFormData } from "../components/public/landing-route/LoginModal";
+import { IProblem } from "../models/problem";
 
 axios.defaults.baseURL = import.meta.env.VITE_CODENOW_API_URL;
 
@@ -37,8 +34,14 @@ const Account = {
     requests.get<IUserDetails>("/account/", token),
 };
 
+const Problem = {
+  list: (token?: string): Promise<IProblem[]> =>
+    requests.get<IProblem[]>("/problems/?include=lastAttempt", token),
+};
+
 const codeNowApi = {
   Account,
+  Problem,
 };
 
 export default codeNowApi;
