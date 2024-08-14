@@ -75,10 +75,19 @@ const Patterns = {
   PATTERN_LABEL_BIT_MANIPULATION: "Bit Manipulation",
 };
 
+const AttemptConfirmation = {
+  ATTEMPT_CONFIRMATION_HEADER: "Attempt {problemName}?",
+  ATTEMPT_CONFIRMATION_BODY:
+    "Are you sure you want to attempt this problem? You will be given 60 minutes to complete it, after which your attempt will be a failure and given a score of 0.",
+  ATTEMPT_CONFIRMATION_CANCEL_BUTTON: "Cancel",
+  ATTEMPT_CONFIRMATION_CONFIRM_BUTTON: "Attempt",
+};
+
 export const messages = {
   ...Shared,
   ...LandingRoute,
   ...LoginModal,
   ...Problems,
   ...Patterns,
+  ...AttemptConfirmation,
 };

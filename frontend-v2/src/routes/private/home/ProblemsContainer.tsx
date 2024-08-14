@@ -15,10 +15,10 @@ import {
   ProblemCategory,
   ProblemCategoryToLabel,
   TProblemCategory,
-} from "../../models/problem";
-import { useListProblemQuery } from "../../hooks/useListProblemQuery";
+} from "../../../models/problem";
+import { useListProblemQuery } from "../../../hooks/useListProblemQuery";
 import { useMemo } from "react";
-import { messages } from "../../locale/en-CA";
+import { messages } from "../../../locale/en-CA";
 
 /**
  * ProblemAccordionItem component represents a single accordion item

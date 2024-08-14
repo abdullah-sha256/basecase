@@ -4,7 +4,7 @@ import Footer from "./components/common/Footer";
 import { LandingRoute } from "./routes/public/LandingRoute";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./routes/common/ProtectedRoute";
-import { HomeRoute } from "./routes/private/Home";
+import { HomeRoute } from "./routes/private/home/Home";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useConfigureQueryClient } from "./hooks/useConfigureQueryClient";
 import { PublicRoute } from "./routes/common/PublicRoute";

@@ -11,10 +11,15 @@ import {
   Progress,
   Button,
 } from "@chakra-ui/react";
-import { IAttempt, IProblem, TProblemDifficulty } from "../../models/problem";
+import {
+  IAttempt,
+  IProblem,
+  TProblemDifficulty,
+} from "../../../models/problem";
 import { formatDistance } from "date-fns";
-import React from "react";
-import { messages } from "../../locale/en-CA";
+import React, { useState } from "react";
+import { messages } from "../../../locale/en-CA";
+import { AttemptConfirmationDialog } from "./AttemptConfirmationDialog";
 
 interface IProblemTableProps {
   problems: IProblem[];
@@ -44,6 +49,10 @@ const difficultyStyles = {
  * @returns JSX.Element representing the table of problems.
  */
 export const ProblemTable: React.FC<IProblemTableProps> = ({ problems }) => {
+  const [problemToAttempt, setProblemToAttempt] = useState<
+    IProblem | undefined
+  >(undefined);
+
   const textStyle = { fontWeight: 700 };
 
   /**
@@ -111,70 +120,85 @@ export const ProblemTable: React.FC<IProblemTableProps> = ({ problems }) => {
    *
    * @returns JSX.Element with an action button, "Resume" if in progress, otherwise "Attempt".
    */
-  const renderAction = (lastAttempt: IAttempt | undefined): JSX.Element => (
-    <Button
-      variant="ghost"
-      pl={0}
-      _hover={{
-        color: "red.300",
-      }}
-      _active={{
-        color: "red.300",
-      }}
-    >
-      {lastAttempt
-        ? messages.PROBLEMS_TABLE_ACTION_BUTTON_RESUME
-        : messages.PROBLEMS_TABLE_ACTION_BUTTON_ATTEMPT}
-    </Button>
-  );
+  const renderAction = (problem: IProblem): JSX.Element => {
+    const attemptProblem = () => {
+      setProblemToAttempt(problem);
+    };
+
+    const resumeProblem = () => {};
+
+    return (
+      <Button
+        variant="ghost"
+        pl={0}
+        _hover={{
+          color: "red.300",
+        }}
+        _active={{
+          color: "red.300",
+        }}
+        onClick={problem.last_attempt ? resumeProblem : attemptProblem}
+      >
+        {problem.last_attempt
+          ? messages.PROBLEMS_TABLE_ACTION_BUTTON_RESUME
+          : messages.PROBLEMS_TABLE_ACTION_BUTTON_ATTEMPT}
+      </Button>
+    );
+  };
 
   return (
-    <TableContainer>
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>
-              <Text {...textStyle}>
-                {messages.PROBLEMS_TABLE_PROBLEM_HEADER}
-              </Text>
-            </Th>
-            <Th>
-              <Text {...textStyle}>
-                {messages.PROBLEMS_TABLE_DIFFICULTY_HEADER}
-              </Text>
-            </Th>
-            <Th>
-              <Text {...textStyle}>
-                {messages.PROBLEMS_TABLE_CONFIDENCE_HEADER}
-              </Text>
-            </Th>
-            <Th>
-              <Text {...textStyle}>
-                {messages.PROBLEMS_TABLE_LAST_ATTEMPTED_HEADER}
-              </Text>
-            </Th>
-            <Th>
-              <Text {...textStyle}>
-                {messages.PROBLEMS_TABLE_ACTION_HEADER}
-              </Text>
-            </Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {problems.map((problem) => (
-            <Tr key={problem.id}>
-              <Td>
-                <Link {...textStyle}>{problem.name}</Link>
-              </Td>
-              <Td>{renderDifficultyText(problem.difficulty)}</Td>
-              <Td>{renderConfidenceBar(problem.last_attempt)}</Td>
-              <Td>{renderLastAttemptText(problem.last_attempt)}</Td>
-              <Td>{renderAction(problem.last_attempt)}</Td>
+    <>
+      <AttemptConfirmationDialog
+        problemToAttempt={problemToAttempt}
+        setProblemToAttempt={setProblemToAttempt}
+      />
+      <TableContainer>
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>
+                <Text {...textStyle}>
+                  {messages.PROBLEMS_TABLE_PROBLEM_HEADER}
+                </Text>
+              </Th>
+              <Th>
+                <Text {...textStyle}>
+                  {messages.PROBLEMS_TABLE_DIFFICULTY_HEADER}
+                </Text>
+              </Th>
+              <Th>
+                <Text {...textStyle}>
+                  {messages.PROBLEMS_TABLE_CONFIDENCE_HEADER}
+                </Text>
+              </Th>
+              <Th>
+                <Text {...textStyle}>
+                  {messages.PROBLEMS_TABLE_LAST_ATTEMPTED_HEADER}
+                </Text>
+              </Th>
+              <Th>
+                <Text {...textStyle}>
+                  {messages.PROBLEMS_TABLE_ACTION_HEADER}
+                </Text>
+              </Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </TableContainer>
+          </Thead>
+          <Tbody>
+            {problems.map((problem) => (
+              <Tr key={problem.id}>
+                <Td>
+                  <Link {...textStyle}>{problem.name}</Link>
+                </Td>
+                <Td>{renderDifficultyText(problem.difficulty)}</Td>
+                <Td>{renderConfidenceBar(problem.last_attempt)}</Td>
+                <Td>{renderLastAttemptText(problem.last_attempt)}</Td>
+                <Td>{renderAction(problem)}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
 
