@@ -8,6 +8,7 @@ import { HomeRoute } from "./routes/private/home/Home";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useConfigureQueryClient } from "./hooks/useConfigureQueryClient";
 import { PublicRoute } from "./routes/common/PublicRoute";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Spacer />
         <Footer />
       </Router>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }

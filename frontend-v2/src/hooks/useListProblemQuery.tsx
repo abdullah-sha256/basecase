@@ -22,7 +22,7 @@ export const useListProblemQuery = (): UseQueryResult<
     queryKey: ["useListProblemQuery"],
     queryFn: () => codeNowApi.Problem.list(auth.authToken),
     enabled: !!auth.authToken,
-    staleTime: 10 * 60 * 1000,
-    gcTime: 15 * 60 * 1000,
+    staleTime: 1 * 60 * 1000,
+    gcTime: 2 * 60 * 1000,
   });
 };

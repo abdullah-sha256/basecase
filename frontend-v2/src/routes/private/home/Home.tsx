@@ -1,5 +1,6 @@
 import { Box, Container, Heading } from "@chakra-ui/react";
 import { ProblemsContainer } from "./ProblemsContainer";
+import { AttemptModal } from "./AttemptModal";
 
 export const HomeRoute = () => {
   return (
@@ -12,6 +13,7 @@ export const HomeRoute = () => {
           <ProblemsContainer />
         </Container>
       </Box>
+      <AttemptModal />
     </>
   );
 };

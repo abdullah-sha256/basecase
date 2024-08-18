@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 import { useModalStore } from "./useModalStore";
 import { useAppStore } from "./useAppStore";
 import { useAuth } from "./useAuth";
+import { useShallow } from "zustand/react/shallow";
 
 /**
  * Custom hook to configure and return a `QueryClient` instance for React Query.
@@ -13,8 +14,12 @@ import { useAuth } from "./useAuth";
  * @returns {QueryClient} A configured `QueryClient` instance.
  */
 export const useConfigureQueryClient = (): QueryClient => {
-  const modalStore = useModalStore();
-  const appStore = useAppStore();
+  const { openLoginModal } = useModalStore(
+    useShallow((state) => ({ openLoginModal: state.openLoginModal }))
+  );
+  const { setShouldRetryAuth } = useAppStore(
+    useShallow((state) => ({ setShouldRetryAuth: state.setShouldRetryAuth }))
+  );
   const auth = useAuth();
 
   const queryClient = new QueryClient({
@@ -26,8 +31,8 @@ export const useConfigureQueryClient = (): QueryClient => {
        */
       onError: (error) => {
         if ((error as AxiosError).response?.status === 401) {
-          modalStore.openLoginModal();
-          appStore.setShouldRetryAuth(true);
+          openLoginModal();
+          setShouldRetryAuth(true);
           auth.removeAuthToken();
         }
       },

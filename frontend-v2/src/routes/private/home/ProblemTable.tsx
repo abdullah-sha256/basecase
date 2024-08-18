@@ -19,6 +19,10 @@ import {
 import { formatDistance } from "date-fns";
 import React, { useState } from "react";
 import { messages } from "../../../locale/en-CA";
+import { useModalStore } from "../../../hooks/useModalStore";
+import { useAttemptStore } from "../../../hooks/useAttemptStore";
+import { computeProblemAttemptTimeLeft } from "../../../constants/utils";
+import { useShallow } from "zustand/react/shallow";
 import { AttemptConfirmationDialog } from "./AttemptConfirmationDialog";
 
 interface IProblemTableProps {
@@ -52,7 +56,17 @@ export const ProblemTable: React.FC<IProblemTableProps> = ({ problems }) => {
   const [problemToAttempt, setProblemToAttempt] = useState<
     IProblem | undefined
   >(undefined);
-
+  const { openAttemptModal } = useModalStore(
+    useShallow((state) => ({ openAttemptModal: state.openAttemptModal }))
+  );
+  const { setAttemptInStore, setProblemInStore, setIsTimeUpInStore } =
+    useAttemptStore(
+      useShallow((state) => ({
+        setProblemInStore: state.setProblem,
+        setAttemptInStore: state.setAttempt,
+        setIsTimeUpInStore: state.setIsTimeUp,
+      }))
+    );
   const textStyle = { fontWeight: 700 };
 
   /**
@@ -123,9 +137,19 @@ export const ProblemTable: React.FC<IProblemTableProps> = ({ problems }) => {
   const renderAction = (problem: IProblem): JSX.Element => {
     const attemptProblem = () => {
       setProblemToAttempt(problem);
+      openAttemptModal();
     };
 
-    const resumeProblem = () => {};
+    const resumeProblem = () => {
+      setProblemInStore(problem);
+      setAttemptInStore(problem.last_attempt);
+      const timeLeft = computeProblemAttemptTimeLeft(
+        Date.parse(problem.last_attempt!.timestamp),
+        problem.difficulty
+      );
+      setIsTimeUpInStore(timeLeft <= 0);
+      openAttemptModal();
+    };
 
     return (
       <Button

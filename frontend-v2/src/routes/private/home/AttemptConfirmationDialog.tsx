@@ -9,9 +9,10 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { FocusableElement } from "@chakra-ui/utils";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { IProblem } from "../../../models/problem";
 import { messages } from "../../../locale/en-CA";
+import { useCreateAttemptMutation } from "../../../hooks/useCreateAttemptMutation";
 
 interface IAttemptConfirmationDialogProps {
   problemToAttempt: IProblem | undefined;
@@ -32,6 +33,7 @@ export const AttemptConfirmationDialog: React.FC<
   IAttemptConfirmationDialogProps
 > = ({ problemToAttempt: problem, setProblemToAttempt: setProblem }) => {
   const cancelRef = useRef<FocusableElement>(null);
+  const createAttemptMutation = useCreateAttemptMutation();
 
   return (
     <AlertDialog
@@ -59,7 +61,17 @@ export const AttemptConfirmationDialog: React.FC<
           >
             {messages.ATTEMPT_CONFIRMATION_CANCEL_BUTTON}
           </Button>
-          <Button colorScheme="red" ml={3}>
+          <Button
+            colorScheme="red"
+            ml={3}
+            isLoading={createAttemptMutation.isPending}
+            onClick={() => {
+              if (problem) {
+                setProblem(undefined);
+                createAttemptMutation.mutate(problem);
+              }
+            }}
+          >
             {messages.ATTEMPT_CONFIRMATION_CONFIRM_BUTTON}
           </Button>
         </AlertDialogFooter>
