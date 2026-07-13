@@ -1,4 +1,3 @@
-from rest_framework import generics
 from .models import Problem
 from .serializers import ProblemListSerializer, ProblemDetailSerializer, AttemptSerializer
 from rest_framework import generics, permissions, status, response

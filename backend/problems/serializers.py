@@ -1,4 +1,3 @@
-from unicodedata import category
 from rest_framework import serializers
 from .models import Problem, Attempt
 from django.contrib.auth import get_user_model
