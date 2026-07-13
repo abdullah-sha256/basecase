@@ -4,19 +4,21 @@ import { APP_URL } from "../consts";
 
 <section class="mx-auto max-w-6xl px-6 pb-24">
   <div
-    class="relative overflow-hidden rounded-3xl bg-brand-600 px-8 py-16 text-center text-white sm:px-16"
+    class="relative overflow-hidden rounded-2xl border border-term-500/40 bg-base-900/80 px-8 py-16 text-center shadow-[0_0_60px_rgba(47,213,102,0.12)] sm:px-16"
   >
-    <h2 class="mx-auto max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl">
-      Your next interview starts with the fundamentals.
+    <p class="text-sm font-semibold text-term-400">// ship it</p>
+    <h2 class="mx-auto mt-3 max-w-2xl text-3xl font-bold tracking-tight text-base-100 sm:text-4xl">
+      You test your code.<br />Test yourself.
     </h2>
-    <p class="mx-auto mt-4 max-w-xl text-brand-50">
-      Build your plan, put in the reps, and track the climb. It's free to start.
+    <p class="mx-auto mt-4 max-w-xl font-sans text-lg text-base-300">
+      Free to start. Your first study plan takes about a minute to generate.
     </p>
     <a
       href={`${APP_URL}/`}
-      class="mt-8 inline-block rounded-xl bg-white px-6 py-3 text-base font-semibold text-brand-700 shadow-sm transition hover:bg-brand-50"
+      class="mt-8 inline-block rounded-lg bg-term-500 px-7 py-3 font-semibold text-base-950 shadow-[0_0_24px_rgba(47,213,102,0.35)] transition hover:bg-term-400"
     >
-      Start practicing
+      $ start prepping
     </a>
+    <p class="mt-5 text-xs text-base-400">no credit card. no O(n²) onboarding.</p>
   </div>
 </section>

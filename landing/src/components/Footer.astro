@@ -3,19 +3,14 @@ import { SITE } from "../consts";
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-slate-200 dark:border-slate-800">
+<footer class="border-t border-base-700/60 bg-base-950/80">
   <div
-    class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-slate-500 sm:flex-row dark:text-slate-400"
+    class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-base-400 sm:flex-row"
   >
-    <div class="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-200">
-      <span
-        class="grid h-6 w-6 place-items-center rounded-md bg-brand-600 text-xs font-bold text-white"
-        aria-hidden="true"
-      >
-        b
-      </span>
-      {SITE.name}
-    </div>
+    <p class="font-bold text-base-200">
+      <span class="text-term-400" aria-hidden="true">~/</span>{SITE.name}
+    </p>
     <p>© {year} {SITE.name}. All rights reserved.</p>
+    <p aria-hidden="true">[exit 0]</p>
   </div>
 </footer>

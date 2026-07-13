@@ -7,8 +7,8 @@ export const APP_URL = import.meta.env.PUBLIC_APP_URL ?? "http://localhost:5173"
 
 export const SITE = {
   name: "basecase",
-  title: "basecase — interview prep that sticks",
+  title: "basecase — your interview prep, compiled",
   description:
-    "basecase builds you a personalized LeetCode plan, schedules problems with spaced repetition, and tracks every attempt — so you walk into your interview ready.",
+    "basecase builds a study plan around your strengths and weaknesses, schedules LeetCode problems daily against the forgetting curve, and logs every attempt.",
   url: "https://basecase.dev",
 } as const;

@@ -19,6 +19,7 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonical} />
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#0a0e14" />
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -35,9 +36,7 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
   </head>
-  <body
-    class="min-h-screen bg-white text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100"
-  >
+  <body class="bg-grid min-h-screen bg-base-950 font-mono text-base-200 antialiased">
     <slot />
   </body>
 </html>
