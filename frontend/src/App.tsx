@@ -1,7 +1,7 @@
 import { Spacer } from "@chakra-ui/react";
 import "./App.css";
 import Footer from "./components/common/Footer";
-import { LandingRoute } from "./routes/public/LandingRoute";
+import { SignInRoute } from "./routes/public/SignInRoute";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./routes/common/ProtectedRoute";
 import { HomeRoute } from "./routes/private/Home";
@@ -16,7 +16,7 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<PublicRoute children={<LandingRoute />} />}
+            element={<PublicRoute children={<SignInRoute />} />}
           />
           <Route
             path="/home"

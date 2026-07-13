@@ -13,14 +13,14 @@ import {
   AlertIcon,
 } from "@chakra-ui/react";
 import React from "react";
-import { useModalStore } from "../../../hooks/useModalStore";
-import { FormField, IFormFieldProps } from "../../common/FormField";
+import { useModalStore } from "../../hooks/useModalStore";
+import { FormField, IFormFieldProps } from "./FormField";
 import { useForm } from "react-hook-form";
 import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { messages } from "../../../locale/en-CA";
-import { useLoginMutation } from "../../../hooks/useLoginMutation";
-import { useAppStore } from "../../../hooks/useAppStore";
+import { messages } from "../../locale/en-CA";
+import { useLoginMutation } from "../../hooks/useLoginMutation";
+import { useAppStore } from "../../hooks/useAppStore";
 
 /**
  * Type for login form data.

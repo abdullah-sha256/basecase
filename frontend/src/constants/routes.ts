@@ -3,7 +3,7 @@ const protectedRoutes = {
 };
 
 const publicRoutes = {
-  landing: "/",
+  signIn: "/",
 };
 
 export { protectedRoutes, publicRoutes };
