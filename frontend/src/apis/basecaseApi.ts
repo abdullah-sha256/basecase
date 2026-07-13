@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { IUserDetails, IUserLoginSuccessResponse } from "../models/account";
-import { TLoginFormData } from "../components/public/landing-route/LoginModal";
+import { TLoginFormData } from "../components/common/LoginModal";
 import { IProblem } from "../models/problem";
 
 axios.defaults.baseURL = import.meta.env.VITE_BASECASE_API_URL;

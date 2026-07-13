@@ -21,7 +21,7 @@ import {
   ChevronRightIcon,
 } from "@chakra-ui/icons";
 import { messages } from "../../locale/en-CA";
-import { LoginModal } from "../public/landing-route/LoginModal";
+import { LoginModal } from "./LoginModal";
 import { useLogoutMutation } from "../../hooks/useLogoutMutation";
 
 interface INavItem {

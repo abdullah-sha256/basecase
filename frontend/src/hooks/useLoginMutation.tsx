@@ -4,7 +4,7 @@ import {
   IUserLoginFailureResponse,
   IUserLoginSuccessResponse,
 } from "../models/account";
-import { TLoginFormData } from "../components/public/landing-route/LoginModal";
+import { TLoginFormData } from "../components/common/LoginModal";
 import { AxiosError } from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useModalStore } from "./useModalStore";

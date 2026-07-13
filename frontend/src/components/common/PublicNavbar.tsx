@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/icons";
 import { messages } from "../../locale/en-CA";
 import { useModalStore } from "../../hooks/useModalStore";
-import { LoginModal } from "../public/landing-route/LoginModal";
+import { LoginModal } from "./LoginModal";
 
 interface INavItem {
   label: string;

@@ -6,25 +6,10 @@ const Shared = {
   PROTECTED_NAVBAR_LOGOUT_BUTTON_TEXT: "Log out",
 };
 
-const LandingRoute = {
-  LANDING_ROUTE_HERO_SECTION_PRIMARY_HEADER: "Cover your bases.",
-  LANDING_ROUTE_HERO_SECTION_SECONDARY_HEADER:
-    "Everything you need to excel in your next software interview is now made available through basecase.",
-  LANDING_ROUTE_HERO_SECTION_PRIMARY_BUTTON_TEXT: "I am ready",
-  LANDING_ROUTE_HERO_SECTION_SECONDARY_BUTTON_TEXT: "Learn more",
-  LANDING_ROUTE_FEATURE_SECTION_PRIMARY_HEADER: "We make it easy.",
-  LANDING_ROUTE_FEATURE_SECTION_SECONDARY_HEADER:
-    "Our features are backed by science and designed to make your leetcode grind much more effective. Below are some of the ways we make your preparation better.",
-  LANDING_ROUTE_FEATURE_SECTION_FIRST_CARD_HEADER: "Tailored plan",
-  LANDING_ROUTE_FEATURE_SECTION_FIRST_CARD_TEXT:
-    "Lorem ipsum dolor sit amet catetur, adipisicing elit.",
-  LANDING_ROUTE_FEATURE_SECTION_SECOND_CARD_HEADER: "Distributed practice",
-  LANDING_ROUTE_FEATURE_SECTION_SECOND_CARD_TEXT:
-    "Lorem ipsum dolor sit amet catetur, adipisicing elit.",
-  LANDING_ROUTE_FEATURE_SECTION_THIRD_CARD_HEADER: "Progress Tracking",
-  LANDING_ROUTE_FEATURE_SECTION_THIRD_CARD_TEXT:
-    "Lorem ipsum dolor sit amet catetur, adipisicing elit.",
-  LANDING_ROUTE_FEATURE_CARD_LEARN_MORE_TEXT: "Learn more",
+const SignInRoute = {
+  SIGN_IN_ROUTE_HEADING: "Welcome back",
+  SIGN_IN_ROUTE_SUBHEADING: "Sign in to pick up your prep where you left off.",
+  SIGN_IN_ROUTE_BUTTON_TEXT: "Sign in",
 };
 
 const LoginModal = {
@@ -77,7 +62,7 @@ const Patterns = {
 
 export const messages = {
   ...Shared,
-  ...LandingRoute,
+  ...SignInRoute,
   ...LoginModal,
   ...Problems,
   ...Patterns,
