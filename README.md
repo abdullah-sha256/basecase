@@ -6,15 +6,15 @@ It started as a CSC301 course project back in Winter 2023, called CodeNext, and 
 
 ## Project Structure
 
-- `backend-v2/` — Django 4 + Django REST Framework API (token auth, SQLite)
-- `frontend-v2/` — Vite + React + TypeScript client (Chakra UI, TanStack Query, Zustand)
+- `backend/` — Django 4 + Django REST Framework API (token auth, SQLite)
+- `frontend/` — Vite + React + TypeScript client (Chakra UI, TanStack Query, Zustand)
 
 ## Backend Setup
 
 Requires Python 3 and `pipenv` (`pip3 install pipenv`).
 
 ```bash
-cd backend-v2
+cd backend
 pipenv shell
 pipenv install
 python3 manage.py migrate
@@ -29,7 +29,7 @@ API docs are available at `http://localhost:8000/api/docs/` once the server is r
 Requires Node.js and `npm`.
 
 ```bash
-cd frontend-v2
+cd frontend
 npm install
 npm run dev
 ```
