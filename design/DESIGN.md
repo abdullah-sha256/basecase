@@ -101,6 +101,23 @@ inventing new ones.
 - Decorative elements (traffic lights, cursors, glows) get
   `aria-hidden="true"`.
 
+## UI stack decision (2026-07)
+
+**New app UI is built with [Radix](https://www.radix-ui.com/) primitives,
+not Chakra.** Chakra v2 (runtime CSS-in-JS via Emotion) fights a
+token-driven system and adds runtime cost; Radix provides unstyled,
+accessible behavior primitives that we style ourselves directly from these
+tokens (plain CSS or Tailwind mapped via `@theme inline`, as the landing
+site already does).
+
+Practically:
+
+- Do not add new Chakra components or extend the Chakra theme.
+- Existing Chakra UI in `frontend/` is legacy — leave it until it's
+  migrated screen-by-screen; no big-bang rewrite required.
+- New components: Radix primitive for behavior/a11y + token-based styling
+  for the look. This keeps landing and app on one styling model.
+
 ## Consuming the tokens
 
 **Landing (Tailwind 4):** `landing/src/styles/global.css` imports
@@ -108,16 +125,9 @@ inventing new ones.
 `--color-term-500: var(--bc-term-500);` — then use normal utilities
 (`bg-term-500`, `text-base-300`).
 
-**App (React + Chakra), when ready:** import `design/tokens.css` once in
-`main.tsx`, then reference tokens from the Chakra theme as plain CSS var
-strings:
-
-```ts
-const theme = extendTheme({
-  styles: { global: { body: { bg: "var(--bc-base-950)", color: "var(--bc-base-200)" } } },
-  fonts: { heading: "var(--bc-font-mono)", body: "var(--bc-font-sans)" },
-  colors: { term: { 500: "var(--bc-term-500)" } },
-});
-```
+**App (React + Radix), when ready:** import `design/tokens.css` once in
+`main.tsx`, style Radix primitives with classes/CSS that reference
+`var(--bc-*)` (adding Tailwind with the same `@theme inline` mapping as
+landing is the intended path).
 
 Never copy hex values into app code — always go through a token.
