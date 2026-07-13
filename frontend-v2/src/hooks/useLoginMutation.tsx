@@ -1,5 +1,5 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
-import codeNowApi from "../apis/codeNowApi";
+import basecaseApi from "../apis/basecaseApi";
 import {
   IUserLoginFailureResponse,
   IUserLoginSuccessResponse,
@@ -33,7 +33,7 @@ export const useLoginMutation = (): UseMutationResult<
     TLoginFormData,
     unknown
   >({
-    mutationFn: codeNowApi.Account.login,
+    mutationFn: basecaseApi.Account.login,
     onSuccess: (data: IUserLoginSuccessResponse) => {
       auth.setAuthToken(data.token);
       modalStore.closeLoginModal();

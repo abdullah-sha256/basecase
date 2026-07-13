@@ -3,7 +3,7 @@ import { IUserDetails, IUserLoginSuccessResponse } from "../models/account";
 import { TLoginFormData } from "../components/public/landing-route/LoginModal";
 import { IProblem } from "../models/problem";
 
-axios.defaults.baseURL = import.meta.env.VITE_CODENOW_API_URL;
+axios.defaults.baseURL = import.meta.env.VITE_BASECASE_API_URL;
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
@@ -39,9 +39,9 @@ const Problem = {
     requests.get<IProblem[]>("/problems/?include=lastAttempt", token),
 };
 
-const codeNowApi = {
+const basecaseApi = {
   Account,
   Problem,
 };
 
-export default codeNowApi;
+export default basecaseApi;
