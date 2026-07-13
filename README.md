@@ -7,7 +7,9 @@ It started as a CSC301 course project back in Winter 2023, called CodeNext, and 
 ## Project Structure
 
 - `backend/` — Django 4 + Django REST Framework API (token auth, SQLite)
-- `frontend/` — Vite + React + TypeScript client (Chakra UI, TanStack Query, Zustand)
+- `frontend/` — Vite + React + TypeScript app (Chakra UI, TanStack Query, Zustand)
+- `landing/` — Astro + Tailwind marketing site (static; CTAs link to the app)
+- `design/` — shared design system: [`tokens.css`](design/tokens.css) (source-of-truth CSS variables) and [`DESIGN.md`](design/DESIGN.md) (usage + voice guide)
 
 ## Backend Setup
 
@@ -33,6 +35,18 @@ cd frontend
 npm install
 npm run dev
 ```
+
+## Landing Site Setup
+
+Requires Node.js 22+ and `npm`.
+
+```bash
+cd landing
+npm install
+npm run dev
+```
+
+The marketing CTAs link to the app via `PUBLIC_APP_URL` (see `landing/.env.example`), which defaults to the local Vite dev server.
 
 ## Contributing
 

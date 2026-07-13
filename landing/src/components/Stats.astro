@@ -1,0 +1,21 @@
+---
+const stats = [
+  { value: "150+", label: "curated problems" },
+  { value: "18", label: "patterns covered" },
+  { value: "1", label: "goal per day" },
+  { value: "0", label: "excuses left" },
+];
+---
+
+<section class="border-y border-base-700/60 bg-base-900/50">
+  <dl class="mx-auto grid max-w-6xl grid-cols-2 gap-px sm:grid-cols-4">
+    {
+      stats.map((stat) => (
+        <div class="px-6 py-8 text-center">
+          <dd class="text-3xl font-bold text-term-400">{stat.value}</dd>
+          <dt class="mt-1 text-sm text-base-300">{stat.label}</dt>
+        </div>
+      ))
+    }
+  </dl>
+</section>

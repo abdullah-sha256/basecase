@@ -1,0 +1,16 @@
+---
+import { SITE } from "../consts";
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-base-700/60 bg-base-950/80">
+  <div
+    class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-base-400 sm:flex-row"
+  >
+    <p class="font-bold text-base-200">
+      <span class="text-term-400" aria-hidden="true">~/</span>{SITE.name}
+    </p>
+    <p>© {year} {SITE.name}. All rights reserved.</p>
+    <p aria-hidden="true">[exit 0]</p>
+  </div>
+</footer>

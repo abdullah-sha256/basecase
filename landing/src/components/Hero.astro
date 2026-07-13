@@ -1,0 +1,77 @@
+---
+import { APP_URL } from "../consts";
+---
+
+<section class="relative overflow-hidden">
+  <!-- cyan glow behind the terminal -->
+  <div
+    class="pointer-events-none absolute inset-x-0 top-24 -z-10 mx-auto h-[26rem] max-w-3xl rounded-full bg-glow-500/15 blur-3xl"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div class="mx-auto max-w-6xl px-6 pt-20 pb-16 sm:pt-28">
+    <div class="mx-auto max-w-3xl text-center">
+      <p
+        class="inline-flex items-center gap-2 rounded-full border border-base-700 bg-base-900/80 px-3.5 py-1 text-xs text-base-300"
+      >
+        <span class="h-1.5 w-1.5 rounded-full bg-term-400 shadow-[0_0_8px_rgba(74,222,128,0.9)]"></span>
+        leetcode prep, the systematic way
+      </p>
+
+      <h1
+        class="mt-7 text-4xl font-bold tracking-tight text-balance text-base-100 sm:text-6xl"
+      >
+        Your interview prep,
+        <span class="text-term-400">compiled</span><span class="text-glow-400">.</span>
+      </h1>
+
+      <p class="mx-auto mt-6 max-w-2xl font-sans text-lg text-pretty text-base-300">
+        basecase builds a study plan around your strengths and weaknesses,
+        schedules problems daily against the forgetting curve, and logs every
+        attempt — so nothing you learn gets garbage-collected.
+      </p>
+
+      <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a
+          href={`${APP_URL}/`}
+          class="w-full rounded-lg bg-term-500 px-6 py-3 font-semibold text-base-950 shadow-glow-term-md transition hover:bg-term-400 sm:w-auto"
+        >
+          $ start prepping
+        </a>
+        <a
+          href="#features"
+          class="w-full rounded-lg border border-base-700 bg-base-900/60 px-6 py-3 font-semibold text-base-200 transition hover:border-base-400 hover:text-base-100 sm:w-auto"
+        >
+          man basecase
+        </a>
+      </div>
+    </div>
+
+    <!-- terminal demo -->
+    <div
+      class="mx-auto mt-16 max-w-3xl overflow-hidden rounded-xl border border-base-700 bg-base-900/90 shadow-2xl shadow-black/50"
+    >
+      <div class="flex items-center gap-2 border-b border-base-700 bg-base-800/80 px-4 py-2.5">
+        <span class="h-3 w-3 rounded-full bg-traffic-red" aria-hidden="true"></span>
+        <span class="h-3 w-3 rounded-full bg-traffic-yellow" aria-hidden="true"></span>
+        <span class="h-3 w-3 rounded-full bg-traffic-green" aria-hidden="true"></span>
+        <span class="ml-3 text-xs text-base-400">you@laptop: ~/interviews — zsh</span>
+      </div>
+
+      <div class="overflow-x-auto p-5 text-left text-[13px] leading-relaxed sm:text-sm">
+        <pre class="text-base-200"><span class="text-term-400">$</span> basecase init
+<span class="text-base-400">✔ analyzing your strengths........... done</span>
+<span class="text-base-400">✔ weak patterns found:</span> <span class="text-amber-400">[graphs, dynamic-2d]</span>
+<span class="text-base-400">✔ study plan generated:</span> <span class="text-glow-400">6 weeks, 1 goal/day</span>
+
+<span class="text-term-400">$</span> basecase today
+<span class="text-base-400">┌─</span> two-sum            <span class="text-term-300">easy</span>    arrays-hashing   <span class="text-glow-400">(review)</span>
+<span class="text-base-400">├─</span> course-schedule    <span class="text-amber-400">medium</span>  graphs           <span class="text-base-400">(new)</span>
+<span class="text-base-400">└─</span> coin-change        <span class="text-amber-400">medium</span>  dynamic-1d       <span class="text-amber-400">(due today)</span>
+
+<span class="text-term-400">$</span> <span class="cursor-blink -mb-0.5 inline-block h-4 w-2 bg-term-400"></span></pre>
+      </div>
+    </div>
+  </div>
+</section>
