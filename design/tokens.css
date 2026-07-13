@@ -1,0 +1,82 @@
+/**
+ * basecase design tokens — single source of truth.
+ *
+ * Framework-agnostic CSS custom properties, namespaced --bc-*.
+ * Consumers:
+ *   - landing/  imports this file and maps tokens into Tailwind via `@theme inline`
+ *   - frontend/ can import it and reference `var(--bc-*)` from the Chakra theme
+ *
+ * See design/DESIGN.md for usage rules and the copy voice guide.
+ */
+
+:root {
+  /* ------------------------------------------------------------------ */
+  /* Typography                                                          */
+  /* ------------------------------------------------------------------ */
+
+  /* Mono is the brand: headings, labels, buttons, terminal UI. */
+  --bc-font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
+    "Liberation Mono", monospace;
+  /* Sans is for body paragraphs only — long-form readability. */
+  --bc-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+
+  /* ------------------------------------------------------------------ */
+  /* Color — base scale (deep-space navy, dark-only)                     */
+  /* ------------------------------------------------------------------ */
+
+  --bc-base-950: #0a0e14; /* page background */
+  --bc-base-900: #0d131c; /* panels, cards */
+  --bc-base-800: #131a26; /* raised chrome: terminal title bars, card headers */
+  --bc-base-700: #1d2736; /* borders */
+  --bc-base-600: #2b384c; /* strong borders, hover borders */
+  --bc-base-400: #55627a; /* faint/disabled text, decorations */
+  --bc-base-300: #8b98ad; /* muted text, secondary copy */
+  --bc-base-200: #b7c1d1; /* default body text */
+  --bc-base-100: #e6ebf2; /* headings, emphasized text */
+
+  /* ------------------------------------------------------------------ */
+  /* Color — accents                                                     */
+  /* ------------------------------------------------------------------ */
+
+  /* Terminal green: prompts, success, primary actions. */
+  --bc-term-300: #7cf2a4;
+  --bc-term-400: #4ade80;
+  --bc-term-500: #2fd566; /* primary button fill */
+  --bc-term-600: #1fb454;
+
+  /* Signal cyan: links, highlights, informational accents, glow. */
+  --bc-glow-300: #7de3f4;
+  --bc-glow-400: #38cde8;
+  --bc-glow-500: #12b3d3;
+
+  /* Warm amber: warnings, medium difficulty, sparing winks. */
+  --bc-amber-400: #ffb454;
+
+  /* Terminal window traffic lights (fixed, macOS-standard). */
+  --bc-traffic-red: #ff5f57;
+  --bc-traffic-yellow: #febc2e;
+  --bc-traffic-green: #28c840;
+
+  /* ------------------------------------------------------------------ */
+  /* Effects                                                             */
+  /* ------------------------------------------------------------------ */
+
+  /* Green glow — primary buttons, CTA panel borders. */
+  --bc-glow-term-sm: 0 0 18px rgba(47, 213, 102, 0.25);
+  --bc-glow-term-md: 0 0 24px rgba(47, 213, 102, 0.35);
+  --bc-glow-term-lg: 0 0 60px rgba(47, 213, 102, 0.12);
+  /* Cyan glow — card hover lift. */
+  --bc-glow-cyan-md: 0 8px 40px rgba(18, 179, 211, 0.12);
+  /* Grid line color for the blueprint background. */
+  --bc-grid-line: rgba(139, 152, 173, 0.06);
+
+  /* ------------------------------------------------------------------ */
+  /* Shape                                                               */
+  /* ------------------------------------------------------------------ */
+
+  --bc-radius-sm: 0.375rem; /* small buttons, badges */
+  --bc-radius-md: 0.5rem; /* buttons */
+  --bc-radius-lg: 0.75rem; /* cards, terminal windows */
+  --bc-radius-xl: 1rem; /* large panels (CTA) */
+}

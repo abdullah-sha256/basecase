@@ -1,36 +1,44 @@
 @import "tailwindcss";
+@import "../../../design/tokens.css";
 
-@theme {
-  /* Everything reads terminal — mono is the brand. */
-  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas,
-    "Liberation Mono", monospace;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif;
+/*
+ * Map the shared basecase design tokens (design/tokens.css) into Tailwind.
+ * `inline` keeps utilities pointing at the --bc-* variables, so design/
+ * stays the single source of truth.
+ */
+@theme inline {
+  --font-mono: var(--bc-font-mono);
+  --font-sans: var(--bc-font-sans);
 
-  /* Base — deep-space navy, GitHub-dark adjacent. */
-  --color-base-950: #0a0e14;
-  --color-base-900: #0d131c;
-  --color-base-800: #131a26;
-  --color-base-700: #1d2736;
-  --color-base-600: #2b384c;
-  --color-base-400: #55627a;
-  --color-base-300: #8b98ad;
-  --color-base-200: #b7c1d1;
-  --color-base-100: #e6ebf2;
+  --color-base-950: var(--bc-base-950);
+  --color-base-900: var(--bc-base-900);
+  --color-base-800: var(--bc-base-800);
+  --color-base-700: var(--bc-base-700);
+  --color-base-600: var(--bc-base-600);
+  --color-base-400: var(--bc-base-400);
+  --color-base-300: var(--bc-base-300);
+  --color-base-200: var(--bc-base-200);
+  --color-base-100: var(--bc-base-100);
 
-  /* Terminal green — prompts, success, primary actions. */
-  --color-term-300: #7cf2a4;
-  --color-term-400: #4ade80;
-  --color-term-500: #2fd566;
-  --color-term-600: #1fb454;
+  --color-term-300: var(--bc-term-300);
+  --color-term-400: var(--bc-term-400);
+  --color-term-500: var(--bc-term-500);
+  --color-term-600: var(--bc-term-600);
 
-  /* Signal cyan — links, highlights, glow. */
-  --color-glow-300: #7de3f4;
-  --color-glow-400: #38cde8;
-  --color-glow-500: #12b3d3;
+  --color-glow-300: var(--bc-glow-300);
+  --color-glow-400: var(--bc-glow-400);
+  --color-glow-500: var(--bc-glow-500);
 
-  /* Warm amber — sparingly, for warnings and winks. */
-  --color-amber-400: #ffb454;
+  --color-amber-400: var(--bc-amber-400);
+
+  --color-traffic-red: var(--bc-traffic-red);
+  --color-traffic-yellow: var(--bc-traffic-yellow);
+  --color-traffic-green: var(--bc-traffic-green);
+
+  --shadow-glow-term-sm: var(--bc-glow-term-sm);
+  --shadow-glow-term-md: var(--bc-glow-term-md);
+  --shadow-glow-term-lg: var(--bc-glow-term-lg);
+  --shadow-glow-cyan-md: var(--bc-glow-cyan-md);
 }
 
 html {
@@ -41,11 +49,8 @@ html {
 
 /* Blueprint grid over the whole page. */
 .bg-grid {
-  background-image: linear-gradient(
-      rgba(139, 152, 173, 0.06) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(139, 152, 173, 0.06) 1px, transparent 1px);
+  background-image: linear-gradient(var(--bc-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--bc-grid-line) 1px, transparent 1px);
   background-size: 34px 34px;
 }
 

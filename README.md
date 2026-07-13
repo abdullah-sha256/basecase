@@ -9,6 +9,7 @@ It started as a CSC301 course project back in Winter 2023, called CodeNext, and 
 - `backend/` — Django 4 + Django REST Framework API (token auth, SQLite)
 - `frontend/` — Vite + React + TypeScript app (Chakra UI, TanStack Query, Zustand)
 - `landing/` — Astro + Tailwind marketing site (static; CTAs link to the app)
+- `design/` — shared design system: [`tokens.css`](design/tokens.css) (source-of-truth CSS variables) and [`DESIGN.md`](design/DESIGN.md) (usage + voice guide)
 
 ## Backend Setup
 
