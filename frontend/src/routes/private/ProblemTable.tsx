@@ -1,16 +1,3 @@
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  Link,
-  Text,
-  Progress,
-  Button,
-} from "@chakra-ui/react";
 import { IAttempt, IProblem, TProblemDifficulty } from "../../models/problem";
 import { formatDistance } from "date-fns";
 import React from "react";
@@ -20,18 +7,23 @@ interface IProblemTableProps {
   problems: IProblem[];
 }
 
-// Map difficulty levels to their corresponding styles and labels
-const difficultyStyles = {
+// Map difficulty levels to their corresponding styles and labels.
+// Colors follow the design system: easy = term green, medium = amber,
+// hard = traffic red (see design/DESIGN.md).
+const difficultyStyles: Record<
+  TProblemDifficulty,
+  { className: string; label: string }
+> = {
   easy: {
-    color: "green.600",
+    className: "text-term-400",
     label: messages.PROBLEMS_TABLE_DIFFICULTY_EASY,
   },
   medium: {
-    color: "yellow.600",
+    className: "text-amber-400",
     label: messages.PROBLEMS_TABLE_DIFFICULTY_MEDIUM,
   },
   hard: {
-    color: "red.600",
+    className: "text-traffic-red",
     label: messages.PROBLEMS_TABLE_DIFFICULTY_HARD,
   },
 };
@@ -44,48 +36,21 @@ const difficultyStyles = {
  * @returns JSX.Element representing the table of problems.
  */
 export const ProblemTable: React.FC<IProblemTableProps> = ({ problems }) => {
-  const textStyle = { fontWeight: 700 };
-
-  /**
-   * Renders the difficulty text with appropriate styling.
-   *
-   * @param difficulty - The difficulty level of the problem.
-   *
-   * @returns JSX.Element with styled difficulty label.
-   */
-  const renderDifficultyText = (
-    difficulty: TProblemDifficulty
-  ): JSX.Element => {
-    const { color, label } = difficultyStyles[difficulty];
-    return (
-      <Text color={color} {...textStyle}>
-        {label}
-      </Text>
-    );
-  };
-
   /**
    * Renders the last attempted time as a formatted string.
    *
    * @param lastAttempt - The last attempt object, if any.
    *
-   * @returns JSX.Element displaying the formatted last attempt time.
+   * @returns The formatted last attempt time, or an empty string.
    */
-  const renderLastAttemptText = (
-    lastAttempt: IAttempt | undefined
-  ): JSX.Element => {
-    const text =
-      lastAttempt && lastAttempt.timestamp
-        ? formatDistance(lastAttempt.timestamp, new Date(), {
-            addSuffix: true,
-          })
-            .charAt(0)
-            .toUpperCase() +
-          formatDistance(lastAttempt.timestamp, new Date(), {
-            addSuffix: true,
-          }).slice(1)
-        : "";
-    return <Text {...textStyle}>{text}</Text>;
+  const renderLastAttemptText = (lastAttempt: IAttempt | undefined): string => {
+    if (!lastAttempt?.timestamp) {
+      return "";
+    }
+    const distance = formatDistance(lastAttempt.timestamp, new Date(), {
+      addSuffix: true,
+    });
+    return distance.charAt(0).toUpperCase() + distance.slice(1);
   };
 
   /**
@@ -98,83 +63,75 @@ export const ProblemTable: React.FC<IProblemTableProps> = ({ problems }) => {
   const renderConfidenceBar = (
     lastAttempt: IAttempt | undefined
   ): JSX.Element => (
-    <Progress
-      value={lastAttempt ? undefined : 0}
-      isIndeterminate={!!lastAttempt}
-    />
+    <span className="block h-1.5 w-24 overflow-hidden rounded-full bg-base-700">
+      {lastAttempt ? (
+        <span className="progress-sweep block h-full w-2/5 bg-glow-400"></span>
+      ) : (
+        <span className="block h-full w-0 bg-glow-400"></span>
+      )}
+    </span>
   );
 
-  /**
-   * Renders the action button for attempting or resuming a problem.
-   *
-   * @param lastAttempt - The last attempt object, if any.
-   *
-   * @returns JSX.Element with an action button, "Resume" if in progress, otherwise "Attempt".
-   */
-  const renderAction = (lastAttempt: IAttempt | undefined): JSX.Element => (
-    <Button
-      variant="ghost"
-      pl={0}
-      _hover={{
-        color: "red.300",
-      }}
-      _active={{
-        color: "red.300",
-      }}
-    >
-      {lastAttempt
-        ? messages.PROBLEMS_TABLE_ACTION_BUTTON_RESUME
-        : messages.PROBLEMS_TABLE_ACTION_BUTTON_ATTEMPT}
-    </Button>
-  );
+  const headerClass =
+    "px-5 py-3 text-left text-xs font-bold tracking-wider text-base-400 uppercase";
+  const cellClass = "px-5 py-3.5";
 
   return (
-    <TableContainer>
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>
-              <Text {...textStyle}>
-                {messages.PROBLEMS_TABLE_PROBLEM_HEADER}
-              </Text>
-            </Th>
-            <Th>
-              <Text {...textStyle}>
-                {messages.PROBLEMS_TABLE_DIFFICULTY_HEADER}
-              </Text>
-            </Th>
-            <Th>
-              <Text {...textStyle}>
-                {messages.PROBLEMS_TABLE_CONFIDENCE_HEADER}
-              </Text>
-            </Th>
-            <Th>
-              <Text {...textStyle}>
-                {messages.PROBLEMS_TABLE_LAST_ATTEMPTED_HEADER}
-              </Text>
-            </Th>
-            <Th>
-              <Text {...textStyle}>
-                {messages.PROBLEMS_TABLE_ACTION_HEADER}
-              </Text>
-            </Th>
-          </Tr>
-        </Thead>
-        <Tbody>
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b border-base-700/70 bg-base-800/40">
+            <th className={headerClass}>
+              {messages.PROBLEMS_TABLE_PROBLEM_HEADER}
+            </th>
+            <th className={headerClass}>
+              {messages.PROBLEMS_TABLE_DIFFICULTY_HEADER}
+            </th>
+            <th className={headerClass}>
+              {messages.PROBLEMS_TABLE_CONFIDENCE_HEADER}
+            </th>
+            <th className={headerClass}>
+              {messages.PROBLEMS_TABLE_LAST_ATTEMPTED_HEADER}
+            </th>
+            <th className={headerClass}>
+              {messages.PROBLEMS_TABLE_ACTION_HEADER}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
           {problems.map((problem) => (
-            <Tr key={problem.id}>
-              <Td>
-                <Link {...textStyle}>{problem.name}</Link>
-              </Td>
-              <Td>{renderDifficultyText(problem.difficulty)}</Td>
-              <Td>{renderConfidenceBar(problem.last_attempt)}</Td>
-              <Td>{renderLastAttemptText(problem.last_attempt)}</Td>
-              <Td>{renderAction(problem.last_attempt)}</Td>
-            </Tr>
+            <tr
+              key={problem.id}
+              className="border-b border-base-700/40 last:border-b-0 hover:bg-base-800/40"
+            >
+              <td className={`${cellClass} font-bold text-base-100`}>
+                {problem.name}
+              </td>
+              <td
+                className={`${cellClass} font-bold ${
+                  difficultyStyles[problem.difficulty].className
+                }`}
+              >
+                {difficultyStyles[problem.difficulty].label.toLowerCase()}
+              </td>
+              <td className={cellClass}>
+                {renderConfidenceBar(problem.last_attempt)}
+              </td>
+              <td className={`${cellClass} text-base-300`}>
+                {renderLastAttemptText(problem.last_attempt)}
+              </td>
+              <td className={cellClass}>
+                <button className="font-semibold text-term-400 transition hover:text-term-300">
+                  {problem.last_attempt
+                    ? messages.PROBLEMS_TABLE_ACTION_BUTTON_RESUME.toLowerCase()
+                    : messages.PROBLEMS_TABLE_ACTION_BUTTON_ATTEMPT.toLowerCase()}
+                </button>
+              </td>
+            </tr>
           ))}
-        </Tbody>
-      </Table>
-    </TableContainer>
+        </tbody>
+      </table>
+    </div>
   );
 };
 

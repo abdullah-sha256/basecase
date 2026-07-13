@@ -1,18 +1,4 @@
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  Button,
-  useColorModeValue,
-  Box,
-  Stack,
-  Checkbox,
-  Heading,
-  Alert,
-  AlertIcon,
-} from "@chakra-ui/react";
-import React from "react";
+import * as Dialog from "@radix-ui/react-dialog";
 import { useModalStore } from "../../hooks/useModalStore";
 import { FormField, IFormFieldProps } from "./FormField";
 import { useForm } from "react-hook-form";
@@ -70,15 +56,15 @@ const LoginFormField = (
  * LoginModal component for rendering the login modal with form handling.
  *
  * @remarks
- * This component manages the login form submission, form validation, and displays success or error messages based on the login attempt.
+ * A Radix Dialog styled as a basecase terminal window. Manages the login
+ * form submission, form validation, and displays success or error messages
+ * based on the login attempt.
  *
  * @returns {React.ReactElement} - A React element representing the login modal.
  */
 export const LoginModal = () => {
   const modalStore = useModalStore();
   const appStore = useAppStore();
-  const initialRef = React.useRef(null);
-  const finalRef = React.useRef(null);
   const loginMutation = useLoginMutation();
   const {
     register,
@@ -92,8 +78,9 @@ export const LoginModal = () => {
     loginMutation.mutate(loginFormData);
   };
 
-  const closeModal = () => {
-    if (!appStore.shouldRetryAuth) {
+  const onOpenChange = (open: boolean) => {
+    // The retry-auth modal is sticky: the user must log back in.
+    if (!open && !appStore.shouldRetryAuth) {
       modalStore.closeLoginModal();
     }
   };
@@ -105,81 +92,91 @@ export const LoginModal = () => {
     : messages.LOGIN_MODAL_STANDARD_HEADING;
 
   return (
-    <>
-      <Modal
-        initialFocusRef={initialRef}
-        finalFocusRef={finalRef}
-        isOpen={modalStore.isLoginModalOpen}
-        onClose={closeModal}
-        size={"lg"}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalBody pb={6}>
-            <Box
-              rounded={"lg"}
-              bg={useColorModeValue("white", "gray.700")}
-              p={8}
+    <Dialog.Root open={modalStore.isLoginModalOpen} onOpenChange={onOpenChange}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-40 bg-base-950/70 backdrop-blur-sm" />
+        <Dialog.Content className="fixed top-1/2 left-1/2 z-50 w-[calc(100vw-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-xl border border-base-700 bg-base-900 shadow-2xl shadow-black/50 focus:outline-none">
+          {/* terminal title bar */}
+          <div className="flex items-center gap-2 border-b border-base-700 bg-base-800/80 px-4 py-2.5">
+            <span
+              className="h-3 w-3 rounded-full bg-traffic-red"
+              aria-hidden="true"
+            ></span>
+            <span
+              className="h-3 w-3 rounded-full bg-traffic-yellow"
+              aria-hidden="true"
+            ></span>
+            <span
+              className="h-3 w-3 rounded-full bg-traffic-green"
+              aria-hidden="true"
+            ></span>
+            <span className="ml-3 text-xs text-base-400">basecase — login</span>
+          </div>
+
+          <div className="p-6">
+            <Dialog.Title className="mb-4 text-sm font-bold text-base-100">
+              <span className="text-term-400" aria-hidden="true">
+                ${" "}
+              </span>
+              {modalTitle}
+            </Dialog.Title>
+
+            {loginMutation.isSuccess && (
+              <div
+                role="status"
+                className="mb-4 rounded-md border border-term-500/40 bg-term-500/10 px-3 py-2 text-sm text-term-300"
+              >
+                ✔ {messages.LOGIN_MODAL_SUCCESS_TEXT}
+              </div>
+            )}
+            {loginMutation.isError && (
+              <div
+                role="alert"
+                className="mb-4 rounded-md border border-traffic-red/40 bg-traffic-red/10 px-3 py-2 text-sm text-traffic-red"
+              >
+                {errorMessages ? (
+                  errorMessages.map((errorMessage: string, index: number) => (
+                    <div key={"login-error-" + index}>✘ {errorMessage}</div>
+                  ))
+                ) : (
+                  <div>✘ {loginMutation.error.message}</div>
+                )}
+              </div>
+            )}
+
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col gap-4"
             >
-              <Heading size={"sm"} marginBottom={4}>
-                {modalTitle}
-              </Heading>
-              {loginMutation.isSuccess && (
-                <Alert status="success" marginBottom={4}>
-                  <AlertIcon />
-                  {messages.LOGIN_MODAL_SUCCESS_TEXT}
-                </Alert>
-              )}
-              {loginMutation.isError && (
-                <Alert status="error" marginBottom={4}>
-                  <AlertIcon />
-                  {errorMessages?.map((errorMessage: string, index: number) => (
-                    <div key={"login-error-" + index}>{errorMessage}</div>
-                  ))}
-                </Alert>
-              )}
-              <Stack spacing={4}>
-                <LoginFormField
-                  type="text"
-                  placeholder={messages.LOGIN_MODAL_USERNAME_FIELD_PLACEHOLDER}
-                  name="username"
-                  register={register}
-                  error={errors.username}
-                  label={messages.LOGIN_MODAL_USERNAME_FIELD_LABEL}
-                />
-                <LoginFormField
-                  type="password"
-                  placeholder={messages.LOGIN_MODAL_PASSWORD_FIELD_PLACEHOLDER}
-                  name="password"
-                  register={register}
-                  error={errors.password}
-                  label={messages.LOGIN_MODAL_PASSWORD_FIELD_LABEL}
-                />
-                <Stack spacing={10}>
-                  <Stack
-                    direction={{ base: "column", sm: "row" }}
-                    align={"start"}
-                    justify={"space-between"}
-                  >
-                    <Checkbox>Remember me</Checkbox>
-                  </Stack>
-                  <Button
-                    bg={"red.500"}
-                    color={"white"}
-                    _hover={{
-                      bg: "red.400",
-                    }}
-                    isLoading={loginMutation.isPending}
-                    onClick={handleSubmit(onSubmit)}
-                  >
-                    {messages.LOGIN_MODAL_SIGN_IN_BUTTON_TEXT}
-                  </Button>
-                </Stack>
-              </Stack>
-            </Box>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </>
+              <LoginFormField
+                type="text"
+                placeholder={messages.LOGIN_MODAL_USERNAME_FIELD_PLACEHOLDER}
+                name="username"
+                register={register}
+                error={errors.username}
+                label={messages.LOGIN_MODAL_USERNAME_FIELD_LABEL}
+              />
+              <LoginFormField
+                type="password"
+                placeholder={messages.LOGIN_MODAL_PASSWORD_FIELD_PLACEHOLDER}
+                name="password"
+                register={register}
+                error={errors.password}
+                label={messages.LOGIN_MODAL_PASSWORD_FIELD_LABEL}
+              />
+              <button
+                type="submit"
+                disabled={loginMutation.isPending}
+                className="mt-2 rounded-md bg-term-500 px-4 py-2.5 font-semibold text-base-950 shadow-glow-term-sm transition hover:bg-term-400 disabled:opacity-60"
+              >
+                {loginMutation.isPending
+                  ? "authenticating..."
+                  : `$ ${messages.LOGIN_MODAL_SIGN_IN_BUTTON_TEXT.toLowerCase()}`}
+              </button>
+            </form>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 };

@@ -1,16 +1,10 @@
-import { HTMLInputTypeAttribute } from "react";
+import { HTMLInputTypeAttribute, useId } from "react";
 import {
   FieldError,
   FieldValues,
   Path,
   UseFormRegister,
 } from "react-hook-form";
-import {
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-} from "@chakra-ui/react";
 
 /**
  * IFormFieldProps interface defines the props for the FormField component.
@@ -75,15 +69,31 @@ export function FormField<T extends Path<V>, V extends FieldValues>({
   label,
   valueAsNumber,
 }: IFormFieldProps<T, V>): React.ReactElement {
+  const inputId = useId();
+  const errorId = useId();
+
   return (
-    <FormControl isInvalid={!!error}>
-      <FormLabel>{label}</FormLabel>
-      <Input
+    <div>
+      <label
+        htmlFor={inputId}
+        className="mb-1.5 block text-sm text-base-300"
+      >
+        {label}
+      </label>
+      <input
+        id={inputId}
         type={type}
         placeholder={placeholder}
+        aria-invalid={!!error}
+        aria-describedby={error ? errorId : undefined}
+        className="w-full rounded-md border border-base-700 bg-base-950/60 px-3 py-2 text-base-100 placeholder:text-base-400 focus:border-term-500 focus:ring-1 focus:ring-term-500 focus:outline-none aria-invalid:border-traffic-red"
         {...register(name, { valueAsNumber })}
       />
-      {error && <FormErrorMessage>{error.message}</FormErrorMessage>}
-    </FormControl>
+      {error && (
+        <p id={errorId} className="mt-1.5 text-sm text-traffic-red">
+          {error.message}
+        </p>
+      )}
+    </div>
   );
 }

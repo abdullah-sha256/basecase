@@ -1,5 +1,3 @@
-import { Spacer } from "@chakra-ui/react";
-import "./App.css";
 import Footer from "./components/common/Footer";
 import { SignInRoute } from "./routes/public/SignInRoute";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
@@ -13,18 +11,21 @@ function App() {
   return (
     <QueryClientProvider client={useConfigureQueryClient()}>
       <Router>
-        <Routes>
-          <Route
-            path="/"
-            element={<PublicRoute children={<SignInRoute />} />}
-          />
-          <Route
-            path="/home"
-            element={<ProtectedRoute children={<HomeRoute />} />}
-          />
-        </Routes>
-        <Spacer />
-        <Footer />
+        <div className="bg-grid flex min-h-screen flex-col">
+          <div className="flex-1">
+            <Routes>
+              <Route
+                path="/"
+                element={<PublicRoute children={<SignInRoute />} />}
+              />
+              <Route
+                path="/home"
+                element={<ProtectedRoute children={<HomeRoute />} />}
+              />
+            </Routes>
+          </div>
+          <Footer />
+        </div>
       </Router>
     </QueryClientProvider>
   );
