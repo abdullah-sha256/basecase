@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import codeNowApi from "../apis/codeNowApi";
+import basecaseApi from "../apis/basecaseApi";
 import { useAuth } from "./useAuth";
 import { IProblem } from "../models/problem";
 
@@ -20,7 +20,7 @@ export const useListProblemQuery = (): UseQueryResult<
 
   return useQuery<IProblem[], AxiosError>({
     queryKey: ["useListProblemQuery"],
-    queryFn: () => codeNowApi.Problem.list(auth.authToken),
+    queryFn: () => basecaseApi.Problem.list(auth.authToken),
     enabled: !!auth.authToken,
     staleTime: 10 * 60 * 1000,
     gcTime: 15 * 60 * 1000,

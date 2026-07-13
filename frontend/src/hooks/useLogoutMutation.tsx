@@ -1,5 +1,5 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
-import codeNowApi from "../apis/codeNowApi";
+import basecaseApi from "../apis/basecaseApi";
 import { IUserLogoutFailureResponse } from "../models/account";
 import { AxiosError } from "axios";
 import { useAuth } from "./useAuth";
@@ -25,7 +25,7 @@ export const useLogoutMutation = (): UseMutationResult<
     void,
     unknown
   >({
-    mutationFn: () => codeNowApi.Account.logout(auth.authToken),
+    mutationFn: () => basecaseApi.Account.logout(auth.authToken),
     onSettled: () => {
       auth.removeAuthToken();
       navigate("/");

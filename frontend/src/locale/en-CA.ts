@@ -1,15 +1,15 @@
 const Shared = {
-  APP_NAME: "Code Now",
+  APP_NAME: "basecase",
   NAVBAR_SIGN_IN_BUTTON_TEXT: "Sign in",
   NAVBAR_SIGN_UP_BUTTON_TEXT: "Sign up",
-  FOOTER_TEXT: "© 2024 Code Now. All rights reserved",
+  FOOTER_TEXT: "© 2026 basecase. All rights reserved",
   PROTECTED_NAVBAR_LOGOUT_BUTTON_TEXT: "Log out",
 };
 
 const LandingRoute = {
-  LANDING_ROUTE_HERO_SECTION_PRIMARY_HEADER: "Ready to Code Now?",
+  LANDING_ROUTE_HERO_SECTION_PRIMARY_HEADER: "Cover your bases.",
   LANDING_ROUTE_HERO_SECTION_SECONDARY_HEADER:
-    "Everything you need to excel in your next software interview is now made available through Code Next.",
+    "Everything you need to excel in your next software interview is now made available through basecase.",
   LANDING_ROUTE_HERO_SECTION_PRIMARY_BUTTON_TEXT: "I am ready",
   LANDING_ROUTE_HERO_SECTION_SECONDARY_BUTTON_TEXT: "Learn more",
   LANDING_ROUTE_FEATURE_SECTION_PRIMARY_HEADER: "We make it easy.",
