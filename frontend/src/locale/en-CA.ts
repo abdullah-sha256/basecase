@@ -25,6 +25,23 @@ const LoginModal = {
   LOGIN_MODAL_SUCCESS_TEXT: "You have been successfully logged in.",
 };
 
+const AttemptConfirmation = {
+  ATTEMPT_CONFIRMATION_HEADER: "Attempt {problemName}?",
+  ATTEMPT_CONFIRMATION_BODY:
+    "Are you sure you want to attempt this problem? You will be given {minutes} minutes to complete it, after which your attempt will be a failure and given a score of 0.",
+  ATTEMPT_CONFIRMATION_CANCEL_BUTTON: "Cancel",
+  ATTEMPT_CONFIRMATION_CONFIRM_BUTTON: "Attempt",
+};
+
+const AttemptModal = {
+  ATTEMPT_MODAL_HEADER: "Attempting",
+  ATTEMPT_MODAL_COMPLETE_BUTTON: "Complete Problem",
+  ATTEMPT_MODAL_CONTINUE_BUTTON: "Continue",
+  ATTEMPT_MODAL_FORFEIT_BUTTON: "Forfeit",
+  ATTEMPT_MODAL_TIME_UP: "Time's up!",
+  ATTEMPT_MODAL_TIME_REMAINING: "remaining",
+};
+
 const Problems = {
   PROBLEMS_TABLE_PROBLEM_HEADER: "Problem",
   PROBLEMS_TABLE_DIFFICULTY_HEADER: "Difficulty",
@@ -64,6 +81,8 @@ export const messages = {
   ...Shared,
   ...SignInRoute,
   ...LoginModal,
+  ...AttemptConfirmation,
+  ...AttemptModal,
   ...Problems,
   ...Patterns,
 };
