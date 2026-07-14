@@ -1,7 +1,12 @@
-import { IAttempt, IProblem, TProblemDifficulty } from "../../models/problem";
+import { IAttempt, IProblem, TProblemDifficulty } from "../../../models/problem";
 import { formatDistance } from "date-fns";
-import React from "react";
-import { messages } from "../../locale/en-CA";
+import React, { useState } from "react";
+import { messages } from "../../../locale/en-CA";
+import { useModalStore } from "../../../hooks/useModalStore";
+import { useAttemptStore } from "../../../hooks/useAttemptStore";
+import { computeProblemAttemptTimeLeft } from "../../../constants/utils";
+import { useShallow } from "zustand/react/shallow";
+import { AttemptConfirmationDialog } from "./AttemptConfirmationDialog";
 
 interface IProblemTableProps {
   problems: IProblem[];
@@ -36,6 +41,42 @@ const difficultyStyles: Record<
  * @returns JSX.Element representing the table of problems.
  */
 export const ProblemTable: React.FC<IProblemTableProps> = ({ problems }) => {
+  const [problemToAttempt, setProblemToAttempt] = useState<
+    IProblem | undefined
+  >(undefined);
+  const { openAttemptModal } = useModalStore(
+    useShallow((state) => ({ openAttemptModal: state.openAttemptModal }))
+  );
+  const { setAttemptInStore, setProblemInStore, setIsTimeUpInStore } =
+    useAttemptStore(
+      useShallow((state) => ({
+        setProblemInStore: state.setProblem,
+        setAttemptInStore: state.setAttempt,
+        setIsTimeUpInStore: state.setIsTimeUp,
+      }))
+    );
+
+  /**
+   * Opens the confirmation dialog before starting a fresh attempt.
+   */
+  const attemptProblem = (problem: IProblem) => {
+    setProblemToAttempt(problem);
+  };
+
+  /**
+   * Resumes the problem's in-progress attempt in the attempt modal.
+   */
+  const resumeProblem = (problem: IProblem) => {
+    setProblemInStore(problem);
+    setAttemptInStore(problem.last_attempt);
+    const timeLeft = computeProblemAttemptTimeLeft(
+      Date.parse(problem.last_attempt!.timestamp),
+      problem.difficulty
+    );
+    setIsTimeUpInStore(timeLeft <= 0);
+    openAttemptModal();
+  };
+
   /**
    * Renders the last attempted time as a formatted string.
    *
@@ -77,8 +118,13 @@ export const ProblemTable: React.FC<IProblemTableProps> = ({ problems }) => {
   const cellClass = "px-5 py-3.5";
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm">
+    <>
+      <AttemptConfirmationDialog
+        problemToAttempt={problemToAttempt}
+        setProblemToAttempt={setProblemToAttempt}
+      />
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-base-700/70 bg-base-800/40">
             <th className={headerClass}>
@@ -121,7 +167,14 @@ export const ProblemTable: React.FC<IProblemTableProps> = ({ problems }) => {
                 {renderLastAttemptText(problem.last_attempt)}
               </td>
               <td className={cellClass}>
-                <button className="font-semibold text-term-400 transition hover:text-term-300">
+                <button
+                  onClick={() =>
+                    problem.last_attempt
+                      ? resumeProblem(problem)
+                      : attemptProblem(problem)
+                  }
+                  className="font-semibold text-term-400 transition hover:text-term-300"
+                >
                   {problem.last_attempt
                     ? messages.PROBLEMS_TABLE_ACTION_BUTTON_RESUME.toLowerCase()
                     : messages.PROBLEMS_TABLE_ACTION_BUTTON_ATTEMPT.toLowerCase()}
@@ -129,9 +182,10 @@ export const ProblemTable: React.FC<IProblemTableProps> = ({ problems }) => {
               </td>
             </tr>
           ))}
-        </tbody>
-      </table>
-    </div>
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 };
 

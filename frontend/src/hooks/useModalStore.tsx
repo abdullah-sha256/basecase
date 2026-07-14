@@ -13,6 +13,18 @@ interface IModalState {
    * This function sets the `isLoginModalOpen` state to `true`
    */
   openLoginModal: () => void;
+  /**
+   * Boolean indicating whether the attempt modal is currently open.
+   */
+  isAttemptModalOpen: boolean;
+  /**
+   * This function sets the `isAttemptModalOpen` state to `false`
+   */
+  closeAttemptModal: () => void;
+  /**
+   * This function sets the `isAttemptModalOpen` state to `true`
+   */
+  openAttemptModal: () => void;
 }
 
 /**
@@ -24,4 +36,7 @@ export const useModalStore = create<IModalState>((set) => ({
   isLoginModalOpen: false,
   closeLoginModal: () => set(() => ({ isLoginModalOpen: false })),
   openLoginModal: () => set(() => ({ isLoginModalOpen: true })),
+  isAttemptModalOpen: false,
+  closeAttemptModal: () => set(() => ({ isAttemptModalOpen: false })),
+  openAttemptModal: () => set(() => ({ isAttemptModalOpen: true })),
 }));
