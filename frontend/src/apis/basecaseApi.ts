@@ -1,7 +1,11 @@
 import axios, { AxiosResponse } from "axios";
 import { IUserDetails, IUserLoginSuccessResponse } from "../models/account";
 import { TLoginFormData } from "../components/common/LoginModal";
-import { IAttempt, IProblem } from "../models/problem";
+import {
+  IAttempt,
+  ICompleteAttemptPayload,
+  IProblem,
+} from "../models/problem";
 
 axios.defaults.baseURL = import.meta.env.VITE_BASECASE_API_URL;
 
@@ -18,6 +22,8 @@ const requests = {
     axios.post<T>(url, body, getHeaders(token)).then(responseBody),
   put: <T, V>(url: string, body: V, token: string) =>
     axios.put<T>(url, body, getHeaders(token)).then(responseBody),
+  patch: <T, V>(url: string, body: V, token?: string) =>
+    axios.patch<T>(url, body, getHeaders(token)).then(responseBody),
   del: <T>(url: string, token?: string) =>
     axios.delete<T>(url, getHeaders(token)).then(responseBody),
 };
@@ -45,6 +51,16 @@ const Problem = {
     ),
   detail: (problemId: string, token?: string): Promise<IProblem> =>
     requests.get<IProblem>("/problems/" + problemId + "/", token),
+  completeAttempt: (
+    attemptId: number,
+    payload: ICompleteAttemptPayload,
+    token?: string
+  ): Promise<IAttempt> =>
+    requests.patch<IAttempt, ICompleteAttemptPayload>(
+      "/attempts/" + attemptId + "/",
+      payload,
+      token
+    ),
 };
 
 const basecaseApi = {

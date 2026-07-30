@@ -2,6 +2,7 @@ import * as Accordion from "@radix-ui/react-accordion";
 import { ProblemTable } from "./ProblemTable";
 import {
   IProblem,
+  isAttemptInProgress,
   ProblemCategory,
   ProblemCategoryToLabel,
   TProblemCategory,
@@ -28,6 +29,15 @@ const AccordionChevron = () => (
 );
 
 /**
+ * A problem counts as completed once its latest attempt is scored above 0
+ * (a 0 score records a forfeit/failure).
+ */
+const isProblemCompleted = (problem: IProblem): boolean =>
+  !!problem.last_attempt &&
+  !isAttemptInProgress(problem.last_attempt) &&
+  (problem.last_attempt.score ?? 0) > 0;
+
+/**
  * ProblemAccordionItem component represents a single accordion item
  * for a specific problem category. It displays a table of problems
  * within the category.
@@ -42,37 +52,45 @@ const ProblemAccordionItem = ({
 }: {
   category: TProblemCategory;
   problems: IProblem[];
-}) => (
-  <Accordion.Item
-    value={category}
-    className="mb-4 overflow-hidden rounded-xl border border-base-700 bg-base-900/70 transition hover:border-base-600"
-  >
-    <Accordion.Header>
-      <Accordion.Trigger className="group flex w-full items-center gap-4 px-5 py-4 text-left">
-        <span className="flex-1 font-bold text-base-100">
-          {ProblemCategoryToLabel[category]}
-        </span>
-        <span className="text-sm font-bold text-base-400">
-          {messages.PROBLEMS_CONTAINER_COMPLETED_COUNT.replace(
-            "{total}",
-            problems.length.toString()
-          )}
-        </span>
-        <span
-          className="hidden h-1.5 w-28 overflow-hidden rounded-full bg-base-700 sm:block"
-          aria-hidden="true"
-        >
-          {/* progress fill — completed tracking lands with the attempt flow */}
-          <span className="block h-full w-0 bg-term-500"></span>
-        </span>
-        <AccordionChevron />
-      </Accordion.Trigger>
-    </Accordion.Header>
-    <Accordion.Content className="border-t border-base-700/70">
-      <ProblemTable problems={problems} />
-    </Accordion.Content>
-  </Accordion.Item>
-);
+}) => {
+  const completed = problems.filter(isProblemCompleted).length;
+  const completedPercent =
+    problems.length > 0 ? (completed / problems.length) * 100 : 0;
+
+  return (
+    <Accordion.Item
+      value={category}
+      className="mb-4 overflow-hidden rounded-xl border border-base-700 bg-base-900/70 transition hover:border-base-600"
+    >
+      <Accordion.Header>
+        <Accordion.Trigger className="group flex w-full items-center gap-4 px-5 py-4 text-left">
+          <span className="flex-1 font-bold text-base-100">
+            {ProblemCategoryToLabel[category]}
+          </span>
+          <span className="text-sm font-bold text-base-400">
+            {messages.PROBLEMS_CONTAINER_COMPLETED_COUNT.replace(
+              "{completed}",
+              completed.toString()
+            ).replace("{total}", problems.length.toString())}
+          </span>
+          <span
+            className="hidden h-1.5 w-28 overflow-hidden rounded-full bg-base-700 sm:block"
+            aria-hidden="true"
+          >
+            <span
+              className="block h-full bg-term-500"
+              style={{ width: `${completedPercent}%` }}
+            ></span>
+          </span>
+          <AccordionChevron />
+        </Accordion.Trigger>
+      </Accordion.Header>
+      <Accordion.Content className="border-t border-base-700/70">
+        <ProblemTable problems={problems} />
+      </Accordion.Content>
+    </Accordion.Item>
+  );
+};
 
 /**
  * Pulsing placeholder rows shown while the problem list loads.

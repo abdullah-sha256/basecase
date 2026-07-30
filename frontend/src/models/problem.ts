@@ -87,10 +87,32 @@ export interface IProblem {
 
 /**
  * IAttempt represents the structure of an attempt to solve a problem.
+ *
+ * @remarks
+ * `duration`, `score`, and `num_attempts` are null while the attempt is
+ * still in progress; completing the attempt fills them in.
  */
 export interface IAttempt {
+  id: number;
   timestamp: string;
-  duration: number;
+  duration: number | null;
+  score: number | null;
+  num_attempts: number | null;
+}
+
+/**
+ * An attempt is in progress while it has no recorded outcome.
+ */
+export const isAttemptInProgress = (attempt: IAttempt): boolean =>
+  attempt.score === null &&
+  attempt.duration === null &&
+  attempt.num_attempts === null;
+
+/**
+ * Payload for completing (scoring) an attempt. A score of 0 records a
+ * forfeit/failure; duration is computed server-side.
+ */
+export interface ICompleteAttemptPayload {
   score: number;
-  num_attempts: number;
+  num_attempts?: number;
 }
