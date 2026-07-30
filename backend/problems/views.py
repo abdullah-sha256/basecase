@@ -1,5 +1,12 @@
-from .models import Problem
-from .serializers import ProblemListSerializer, ProblemDetailSerializer, AttemptSerializer
+import math
+from django.utils import timezone
+from .models import Problem, Attempt
+from .serializers import (
+    ProblemListSerializer,
+    ProblemDetailSerializer,
+    AttemptSerializer,
+    AttemptCompleteSerializer,
+)
 from rest_framework import generics, permissions, status, response
 
 class ProblemList(generics.ListAPIView):
@@ -43,3 +50,25 @@ class AttemptListCreate(generics.RetrieveAPIView, generics.CreateAPIView):
             serializedAttempt.save(problem=problem, user=request.user)
             return response.Response(serializedAttempt.data, status=status.HTTP_201_CREATED)
         return response.Response(serializedAttempt.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class AttemptComplete(generics.UpdateAPIView):
+    """
+    API view to complete (score) an in-progress attempt.
+
+    The client submits `score` (0-10; 0 means forfeited/failed) and
+    optionally `num_attempts`. The elapsed `duration` is computed
+    server-side from the attempt's start timestamp.
+    """
+    serializer_class = AttemptCompleteSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        # Users can only complete their own attempts.
+        return Attempt.objects.filter(user=self.request.user)
+
+    def perform_update(self, serializer):
+        attempt = serializer.instance
+        elapsed_seconds = (timezone.now() - attempt.timestamp).total_seconds()
+        # Duration is stored in whole minutes, within the model's 1-1440 bounds.
+        duration = min(max(math.ceil(elapsed_seconds / 60), 1), 1440)
+        serializer.save(duration=duration)

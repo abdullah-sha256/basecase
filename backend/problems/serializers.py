@@ -29,7 +29,7 @@ class ProblemListSerializer(serializers.ModelSerializer):
         """
         Retrieve the last attempt for the given problem made by the current user.
         """
-        fields = ['timestamp', 'duration', 'score', 'num_attempts']
+        fields = ['id', 'timestamp', 'duration', 'score', 'num_attempts']
         last_attempt = problem.get_last_attempt(self.context['request'].user)
 
         if last_attempt:
@@ -70,6 +70,28 @@ class ProblemDetailSerializer(serializers.ModelSerializer):
         if attempts:
             return AttemptSerializer(attempts, many=True).data
         return []
+
+class AttemptCompleteSerializer(serializers.ModelSerializer):
+    """
+    Serializer for completing (scoring) an in-progress attempt.
+
+    Only `score` and `num_attempts` are writable; `duration` is computed
+    server-side from the attempt's timestamp.
+    """
+    class Meta:
+        model = Attempt
+        fields = ('id', 'timestamp', 'duration', 'score', 'num_attempts')
+        read_only_fields = ('id', 'timestamp', 'duration')
+
+    def validate(self, data):
+        if not self.instance.is_in_progress:
+            raise serializers.ValidationError(
+                'This attempt has already been completed.')
+        if data.get('score') is None:
+            raise serializers.ValidationError(
+                'A score is required to complete an attempt.')
+        return data
+
 
 class AttemptSerializer(serializers.ModelSerializer):
     """

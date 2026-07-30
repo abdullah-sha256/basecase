@@ -39,7 +39,16 @@ const AttemptModal = {
   ATTEMPT_MODAL_CONTINUE_BUTTON: "Continue",
   ATTEMPT_MODAL_FORFEIT_BUTTON: "Forfeit",
   ATTEMPT_MODAL_TIME_UP: "Time's up!",
+  ATTEMPT_MODAL_TIME_UP_BODY:
+    "This attempt is out of time and will be recorded as a failure. Review the solution, then come back stronger — it'll resurface in your plan.",
   ATTEMPT_MODAL_TIME_REMAINING: "remaining",
+  ATTEMPT_MODAL_SCORE_HEADING: "How did it go?",
+  ATTEMPT_MODAL_SCORE_LABEL:
+    "Rate your solve from 1 (barely) to 10 (flawless).",
+  ATTEMPT_MODAL_TRIES_LABEL: "Submissions until it passed",
+  ATTEMPT_MODAL_LOG_BUTTON: "log attempt",
+  ATTEMPT_MODAL_BACK_BUTTON: "back to timer",
+  ATTEMPT_MODAL_ERROR_TEXT: "Could not save the attempt. Please try again.",
 };
 
 const Problems = {
@@ -53,7 +62,7 @@ const Problems = {
   PROBLEMS_TABLE_DIFFICULTY_EASY: "Easy",
   PROBLEMS_TABLE_DIFFICULTY_MEDIUM: "Medium",
   PROBLEMS_TABLE_DIFFICULTY_HARD: "Hard",
-  PROBLEMS_CONTAINER_COMPLETED_COUNT: "(0 / {total})",
+  PROBLEMS_CONTAINER_COMPLETED_COUNT: "({completed} / {total})",
 };
 
 const Patterns = {

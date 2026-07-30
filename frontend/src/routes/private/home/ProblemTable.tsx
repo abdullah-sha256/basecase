@@ -1,4 +1,9 @@
-import { IAttempt, IProblem, TProblemDifficulty } from "../../../models/problem";
+import {
+  IAttempt,
+  IProblem,
+  isAttemptInProgress,
+  TProblemDifficulty,
+} from "../../../models/problem";
 import { formatDistance } from "date-fns";
 import React, { useState } from "react";
 import { messages } from "../../../locale/en-CA";
@@ -99,19 +104,28 @@ export const ProblemTable: React.FC<IProblemTableProps> = ({ problems }) => {
    *
    * @param lastAttempt - The last attempt object, if any.
    *
-   * @returns JSX.Element with a progress bar, indeterminate if in progress.
+   * @returns JSX.Element with a progress bar: indeterminate sweep while an
+   * attempt is in progress, score-proportional fill once it's scored.
    */
   const renderConfidenceBar = (
     lastAttempt: IAttempt | undefined
-  ): JSX.Element => (
-    <span className="block h-1.5 w-24 overflow-hidden rounded-full bg-base-700">
-      {lastAttempt ? (
-        <span className="progress-sweep block h-full w-2/5 bg-glow-400"></span>
-      ) : (
-        <span className="block h-full w-0 bg-glow-400"></span>
-      )}
-    </span>
-  );
+  ): JSX.Element => {
+    const inProgress = lastAttempt && isAttemptInProgress(lastAttempt);
+    const scorePercent =
+      lastAttempt?.score != null ? lastAttempt.score * 10 : 0;
+    return (
+      <span className="block h-1.5 w-24 overflow-hidden rounded-full bg-base-700">
+        {inProgress ? (
+          <span className="progress-sweep block h-full w-2/5 bg-glow-400"></span>
+        ) : (
+          <span
+            className="block h-full bg-glow-400"
+            style={{ width: `${scorePercent}%` }}
+          ></span>
+        )}
+      </span>
+    );
+  };
 
   const headerClass =
     "px-5 py-3 text-left text-xs font-bold tracking-wider text-base-400 uppercase";
@@ -169,13 +183,15 @@ export const ProblemTable: React.FC<IProblemTableProps> = ({ problems }) => {
               <td className={cellClass}>
                 <button
                   onClick={() =>
-                    problem.last_attempt
+                    problem.last_attempt &&
+                    isAttemptInProgress(problem.last_attempt)
                       ? resumeProblem(problem)
                       : attemptProblem(problem)
                   }
                   className="font-semibold text-term-400 transition hover:text-term-300"
                 >
-                  {problem.last_attempt
+                  {problem.last_attempt &&
+                  isAttemptInProgress(problem.last_attempt)
                     ? messages.PROBLEMS_TABLE_ACTION_BUTTON_RESUME.toLowerCase()
                     : messages.PROBLEMS_TABLE_ACTION_BUTTON_ATTEMPT.toLowerCase()}
                 </button>
