@@ -43,12 +43,32 @@ const AttemptModal = {
     "This attempt is out of time and will be recorded as a failure. Review the solution, then come back stronger — it'll resurface in your plan.",
   ATTEMPT_MODAL_TIME_REMAINING: "remaining",
   ATTEMPT_MODAL_SCORE_HEADING: "How did it go?",
-  ATTEMPT_MODAL_SCORE_LABEL:
-    "Rate your solve from 1 (barely) to 10 (flawless).",
+  ATTEMPT_MODAL_OUTCOME_LABEL: "Pick the outcome that fits best.",
+  ATTEMPT_MODAL_OUTCOME_CLEAN: "solved it",
+  ATTEMPT_MODAL_OUTCOME_CLEAN_DETAIL: "No help needed",
+  ATTEMPT_MODAL_OUTCOME_HINTS: "with hints",
+  ATTEMPT_MODAL_OUTCOME_HINTS_DETAIL: "Peeked at the approach",
+  ATTEMPT_MODAL_OUTCOME_PARTIAL: "partial",
+  ATTEMPT_MODAL_OUTCOME_PARTIAL_DETAIL: "Progress, but incomplete",
+  ATTEMPT_MODAL_OUTCOME_FAILED: "couldn't solve",
+  ATTEMPT_MODAL_OUTCOME_FAILED_DETAIL: "It won this round",
   ATTEMPT_MODAL_TRIES_LABEL: "Submissions until it passed",
   ATTEMPT_MODAL_LOG_BUTTON: "log attempt",
   ATTEMPT_MODAL_BACK_BUTTON: "back to timer",
   ATTEMPT_MODAL_ERROR_TEXT: "Could not save the attempt. Please try again.",
+  ATTEMPT_MODAL_AI_HEADING: "ai grade (optional)",
+  ATTEMPT_MODAL_AI_PLACEHOLDER: "Paste your solution here for an AI grade...",
+  ATTEMPT_MODAL_AI_BUTTON: "ai grade",
+  ATTEMPT_MODAL_AI_PENDING: "grading...",
+  ATTEMPT_MODAL_AI_ERROR: "AI grading failed. Score it manually.",
+};
+
+const TodayPlan = {
+  TODAY_PLAN_TITLE: "$ basecase today",
+  TODAY_PLAN_REVIEW_TAG: "(review due)",
+  TODAY_PLAN_NEW_TAG: "(new)",
+  TODAY_PLAN_EMPTY:
+    "Nothing due. Attempt something new below and it'll come back on schedule.",
 };
 
 const Problems = {
@@ -92,6 +112,7 @@ export const messages = {
   ...LoginModal,
   ...AttemptConfirmation,
   ...AttemptModal,
+  ...TodayPlan,
   ...Problems,
   ...Patterns,
 };

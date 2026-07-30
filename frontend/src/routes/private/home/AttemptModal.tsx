@@ -2,26 +2,24 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useState } from "react";
 import { useModalStore } from "../../../hooks/useModalStore";
 import { AttemptTimer } from "./AttemptTimer";
+import { ScoringView } from "./ScoringView";
 import { useAttemptStore } from "../../../hooks/useAttemptStore";
 import { useShallow } from "zustand/react/shallow";
 import { useCompleteAttemptMutation } from "../../../hooks/useCompleteAttemptMutation";
+import { TAttemptOutcome } from "../../../models/problem";
 import { messages } from "../../../locale/en-CA";
-
-const SCORES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 /**
  * Fullscreen modal for an in-progress attempt: a terminal-style takeover
  * with a countdown timer and a link to the problem on LeetCode.
  *
- * Completing switches to a scoring view (score 1-10 + submissions until
- * pass); forfeiting or running out of time records a score of 0. Closing
- * the modal without scoring leaves the attempt in progress so it can be
- * resumed later.
+ * Completing switches to the rubric scoring view (with optional AI
+ * grading); forfeiting or running out of time records a score of 0.
+ * Closing the modal without scoring leaves the attempt in progress so it
+ * can be resumed later.
  */
 export const AttemptModal = () => {
   const [view, setView] = useState<"timer" | "score">("timer");
-  const [score, setScore] = useState<number | undefined>(undefined);
-  const [tries, setTries] = useState<number>(1);
 
   const { closeAttemptModal, isAttemptModalOpen } = useModalStore(
     useShallow((state) => ({
@@ -45,8 +43,6 @@ export const AttemptModal = () => {
   useEffect(() => {
     if (isAttemptModalOpen) {
       setView("timer");
-      setScore(undefined);
-      setTries(1);
       resetMutation();
     }
   }, [isAttemptModalOpen, resetMutation]);
@@ -55,17 +51,11 @@ export const AttemptModal = () => {
     return null;
   }
 
-  const resetLocalState = () => {
-    setView("timer");
-    setScore(undefined);
-    setTries(1);
-  };
-
   const onOpenChange = (open: boolean) => {
     if (!open) {
       closeAttemptModal();
       resetAttempt();
-      resetLocalState();
+      setView("timer");
       completeAttemptMutation.reset();
     }
   };
@@ -74,10 +64,8 @@ export const AttemptModal = () => {
     completeAttemptMutation.mutate({ score: 0 });
   };
 
-  const logAttempt = () => {
-    if (score !== undefined) {
-      completeAttemptMutation.mutate({ score, num_attempts: tries });
-    }
+  const logAttempt = (outcome: TAttemptOutcome, tries: number) => {
+    completeAttemptMutation.mutate({ outcome, num_attempts: tries });
   };
 
   const attemptTime = Date.parse(attempt.timestamp);
@@ -188,74 +176,11 @@ export const AttemptModal = () => {
                 </div>
               </>
             ) : (
-              <div className="w-full max-w-md">
-                <h2 className="text-center text-xl font-bold text-base-100">
-                  {messages.ATTEMPT_MODAL_SCORE_HEADING}
-                </h2>
-
-                <fieldset className="mt-8">
-                  <legend className="mb-3 font-sans text-sm text-base-300">
-                    {messages.ATTEMPT_MODAL_SCORE_LABEL}
-                  </legend>
-                  <div className="grid grid-cols-5 gap-2">
-                    {SCORES.map((value) => (
-                      <button
-                        key={value}
-                        onClick={() => setScore(value)}
-                        aria-pressed={score === value}
-                        className={`rounded-md border px-0 py-2 text-sm font-bold transition ${
-                          score === value
-                            ? "border-term-500 bg-term-500 text-base-950 shadow-glow-term-sm"
-                            : "border-base-700 text-base-300 hover:border-term-500/60 hover:text-base-100"
-                        }`}
-                      >
-                        {value}
-                      </button>
-                    ))}
-                  </div>
-                </fieldset>
-
-                <div className="mt-6">
-                  <label
-                    htmlFor="attempt-tries"
-                    className="mb-1.5 block font-sans text-sm text-base-300"
-                  >
-                    {messages.ATTEMPT_MODAL_TRIES_LABEL}
-                  </label>
-                  <input
-                    id="attempt-tries"
-                    type="number"
-                    min={1}
-                    max={10}
-                    value={tries}
-                    onChange={(event) =>
-                      setTries(
-                        Math.min(10, Math.max(1, Number(event.target.value)))
-                      )
-                    }
-                    className="w-full rounded-md border border-base-700 bg-base-950/60 px-3 py-2 text-base-100 focus:border-term-500 focus:ring-1 focus:ring-term-500 focus:outline-none"
-                  />
-                </div>
-
-                <div className="mt-8 flex items-center justify-between">
-                  <button
-                    onClick={() => setView("timer")}
-                    className="text-sm text-base-400 transition hover:text-base-100"
-                  >
-                    ← {messages.ATTEMPT_MODAL_BACK_BUTTON}
-                  </button>
-                  <button
-                    onClick={logAttempt}
-                    disabled={score === undefined || isPending}
-                    className="rounded-md bg-term-500 px-5 py-2.5 text-sm font-semibold text-base-950 shadow-glow-term-sm transition hover:bg-term-400 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    ${" "}
-                    {isPending
-                      ? "logging..."
-                      : messages.ATTEMPT_MODAL_LOG_BUTTON}
-                  </button>
-                </div>
-              </div>
+              <ScoringView
+                isPending={isPending}
+                onBack={() => setView("timer")}
+                onSubmit={logAttempt}
+              />
             )}
           </div>
         </Dialog.Content>

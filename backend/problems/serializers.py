@@ -75,21 +75,33 @@ class AttemptCompleteSerializer(serializers.ModelSerializer):
     """
     Serializer for completing (scoring) an in-progress attempt.
 
-    Only `score` and `num_attempts` are writable; `duration` is computed
-    server-side from the attempt's timestamp.
+    Clients submit either a rubric `outcome` (clean/hints/partial/failed,
+    from which the score is computed server-side) or a raw `score` of 0
+    (forfeit/time-up). `duration` is always computed server-side from the
+    attempt's timestamp.
     """
+    outcome = serializers.ChoiceField(
+        choices=['clean', 'hints', 'partial', 'failed'],
+        write_only=True, required=False)
+
     class Meta:
         model = Attempt
-        fields = ('id', 'timestamp', 'duration', 'score', 'num_attempts')
+        fields = ('id', 'timestamp', 'duration', 'score', 'num_attempts',
+                  'outcome')
         read_only_fields = ('id', 'timestamp', 'duration')
 
     def validate(self, data):
         if not self.instance.is_in_progress:
             raise serializers.ValidationError(
                 'This attempt has already been completed.')
-        if data.get('score') is None:
+        has_outcome = data.get('outcome') is not None
+        has_score = data.get('score') is not None
+        if not has_outcome and not has_score:
             raise serializers.ValidationError(
-                'A score is required to complete an attempt.')
+                'An outcome or score is required to complete an attempt.')
+        if has_outcome and has_score:
+            raise serializers.ValidationError(
+                'Provide either an outcome or a score, not both.')
         return data
 
 
