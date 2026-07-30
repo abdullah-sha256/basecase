@@ -45,6 +45,10 @@ class Problem(models.Model):
 
     category = models.CharField(max_length=100, choices=Category.choices)
 
+    # Plain-text problem statement, fetched from LeetCode on first use
+    # (see leetcode.get_statement). Empty until fetched.
+    statement = models.TextField(blank=True, default='')
+
     def get_last_attempt(self, user):
         if user.is_anonymous:
             return None

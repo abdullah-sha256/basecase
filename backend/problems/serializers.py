@@ -21,7 +21,9 @@ class ProblemListSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Problem
-        fields = '__all__'
+        # The statement is grading-prompt context, not list data — it can
+        # be kilobytes per problem, so keep it out of the payload.
+        exclude = ('statement',)
 
     last_attempt = serializers.SerializerMethodField()
 
@@ -60,7 +62,7 @@ class ProblemDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Problem
-        fields = '__all__'
+        exclude = ('statement',)
 
     def get_attempts(self, problem):
         """
