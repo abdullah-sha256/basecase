@@ -3,8 +3,11 @@ import { IUserDetails, IUserLoginSuccessResponse } from "../models/account";
 import { TLoginFormData } from "../components/common/LoginModal";
 import {
   IAttempt,
+  IClientConfig,
   ICompleteAttemptPayload,
+  IGradeSuggestion,
   IProblem,
+  ITodayPlan,
 } from "../models/problem";
 
 axios.defaults.baseURL = import.meta.env.VITE_BASECASE_API_URL;
@@ -61,11 +64,29 @@ const Problem = {
       payload,
       token
     ),
+  gradeAttempt: (
+    attemptId: number,
+    payload: { code: string; notes?: string },
+    token?: string
+  ): Promise<IGradeSuggestion> =>
+    requests.post<IGradeSuggestion, { code: string; notes?: string }>(
+      "/attempts/" + attemptId + "/grade/",
+      payload,
+      token
+    ),
+  todayPlan: (token?: string): Promise<ITodayPlan> =>
+    requests.get<ITodayPlan>("/plan/today/", token),
+};
+
+const Config = {
+  get: (token?: string): Promise<IClientConfig> =>
+    requests.get<IClientConfig>("/config/", token),
 };
 
 const basecaseApi = {
   Account,
   Problem,
+  Config,
 };
 
 export default basecaseApi;

@@ -109,10 +109,41 @@ export const isAttemptInProgress = (attempt: IAttempt): boolean =>
   attempt.num_attempts === null;
 
 /**
- * Payload for completing (scoring) an attempt. A score of 0 records a
- * forfeit/failure; duration is computed server-side.
+ * TAttemptOutcome is the rubric outcome for a completed attempt. The
+ * backend maps it (plus time and tries) to a 0-10 score.
+ */
+export type TAttemptOutcome = "clean" | "hints" | "partial" | "failed";
+
+/**
+ * Payload for completing (scoring) an attempt: either a rubric outcome
+ * (score computed server-side) or a raw score of 0 for forfeit/time-up.
  */
 export interface ICompleteAttemptPayload {
-  score: number;
+  outcome?: TAttemptOutcome;
+  score?: number;
   num_attempts?: number;
+}
+
+/**
+ * Claude's advisory grade for a pasted solution.
+ */
+export interface IGradeSuggestion {
+  outcome: TAttemptOutcome;
+  feedback: string;
+}
+
+/**
+ * Today's study plan: reviews due per the spaced-repetition schedule,
+ * plus fresh problems from the least-covered categories.
+ */
+export interface ITodayPlan {
+  reviews: IProblem[];
+  new: IProblem[];
+}
+
+/**
+ * Feature availability reported by the backend.
+ */
+export interface IClientConfig {
+  ai_grading: boolean;
 }

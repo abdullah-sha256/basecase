@@ -46,6 +46,9 @@ export const useCompleteAttemptMutation = (): UseMutationResult<
       queryClient.invalidateQueries({
         queryKey: ["useListProblemQuery"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["useTodayPlanQuery"],
+      });
       closeAttemptModal();
       resetAttempt();
     },

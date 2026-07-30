@@ -1,13 +1,13 @@
 # basecase
 
-A LeetCode interview-prep tracker. It schedules problems for you, tracks your attempts, and shows your progress — with bigger ambitions around spaced repetition (see [Ebbinghaus's Forgetting Curve](https://www.mindtools.com/a9wjrjw/ebbinghauss-forgetting-curve)), though that's more of a goal than a shipped feature so far.
+A LeetCode interview-prep tracker. It schedules problems for you with spaced repetition (SM-2, in the spirit of [Ebbinghaus's Forgetting Curve](https://www.mindtools.com/a9wjrjw/ebbinghauss-forgetting-curve)), tracks and scores your attempts, and shows your progress. Solved problems resurface right before you'd forget them; struggles come back the next day.
 
 It started as a CSC301 course project back in Winter 2023, called CodeNext, and is now being rewritten from scratch under the basecase name.
 
 ## Project Structure
 
 - `backend/` — Django 4 + Django REST Framework API (token auth, SQLite)
-- `frontend/` — Vite + React + TypeScript app (Chakra UI, TanStack Query, Zustand)
+- `frontend/` — Vite + React + TypeScript app (Radix + design tokens, TanStack Query, Zustand)
 - `landing/` — Astro + Tailwind marketing site (static; CTAs link to the app)
 - `design/` — shared design system: [`tokens.css`](design/tokens.css) (source-of-truth CSS variables) and [`DESIGN.md`](design/DESIGN.md) (usage + voice guide)
 
@@ -25,6 +25,8 @@ python3 manage.py runserver
 ```
 
 API docs are available at `http://localhost:8000/api/docs/` once the server is running.
+
+Optional — AI-assisted attempt grading (Claude suggests a rubric grade for a pasted solution): set `ANTHROPIC_API_KEY` in the backend environment. The feature hides itself when the key is absent. `BASECASE_GRADER_MODEL` overrides the default model (`claude-haiku-4-5`).
 
 ## Frontend Setup
 

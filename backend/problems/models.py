@@ -101,7 +101,31 @@ class Attempt(models.Model):
     @property
     def has_abandoned(self):
         """
-        Returns True if the user has abandoned the problem, 
+        Returns True if the user has abandoned the problem,
         which is defined as having a score of 0.
         """
         return self.score == 0
+
+
+class ReviewState(models.Model):
+    """
+    Per-(user, problem) spaced-repetition state, advanced by SM-2 on every
+    scored attempt. `next_review_at` drives the daily plan.
+    """
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    problem = models.ForeignKey('Problem', on_delete=models.CASCADE)
+    easiness = models.FloatField(default=2.5)
+    interval_days = models.PositiveIntegerField(default=0)
+    repetitions = models.PositiveIntegerField(default=0)
+    last_reviewed_at = models.DateTimeField(null=True, blank=True)
+    next_review_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('user', 'problem')
+        verbose_name = "Review State"
+        verbose_name_plural = "Review States"
+
+    def __str__(self):
+        return (f'ReviewState for {self.user.username} on {self.problem_id}: '
+                f'ef={self.easiness:.2f} interval={self.interval_days}d '
+                f'reps={self.repetitions} next={self.next_review_at}')

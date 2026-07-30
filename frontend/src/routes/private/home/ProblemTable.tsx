@@ -5,12 +5,9 @@ import {
   TProblemDifficulty,
 } from "../../../models/problem";
 import { formatDistance } from "date-fns";
-import React, { useState } from "react";
+import React from "react";
 import { messages } from "../../../locale/en-CA";
-import { useModalStore } from "../../../hooks/useModalStore";
-import { useAttemptStore } from "../../../hooks/useAttemptStore";
-import { computeProblemAttemptTimeLeft } from "../../../constants/utils";
-import { useShallow } from "zustand/react/shallow";
+import { useProblemActions } from "../../../hooks/useProblemActions";
 import { AttemptConfirmationDialog } from "./AttemptConfirmationDialog";
 
 interface IProblemTableProps {
@@ -46,41 +43,12 @@ const difficultyStyles: Record<
  * @returns JSX.Element representing the table of problems.
  */
 export const ProblemTable: React.FC<IProblemTableProps> = ({ problems }) => {
-  const [problemToAttempt, setProblemToAttempt] = useState<
-    IProblem | undefined
-  >(undefined);
-  const { openAttemptModal } = useModalStore(
-    useShallow((state) => ({ openAttemptModal: state.openAttemptModal }))
-  );
-  const { setAttemptInStore, setProblemInStore, setIsTimeUpInStore } =
-    useAttemptStore(
-      useShallow((state) => ({
-        setProblemInStore: state.setProblem,
-        setAttemptInStore: state.setAttempt,
-        setIsTimeUpInStore: state.setIsTimeUp,
-      }))
-    );
-
-  /**
-   * Opens the confirmation dialog before starting a fresh attempt.
-   */
-  const attemptProblem = (problem: IProblem) => {
-    setProblemToAttempt(problem);
-  };
-
-  /**
-   * Resumes the problem's in-progress attempt in the attempt modal.
-   */
-  const resumeProblem = (problem: IProblem) => {
-    setProblemInStore(problem);
-    setAttemptInStore(problem.last_attempt);
-    const timeLeft = computeProblemAttemptTimeLeft(
-      Date.parse(problem.last_attempt!.timestamp),
-      problem.difficulty
-    );
-    setIsTimeUpInStore(timeLeft <= 0);
-    openAttemptModal();
-  };
+  const {
+    problemToAttempt,
+    setProblemToAttempt,
+    attemptProblem,
+    resumeProblem,
+  } = useProblemActions();
 
   /**
    * Renders the last attempted time as a formatted string.
