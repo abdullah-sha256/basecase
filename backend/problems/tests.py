@@ -8,7 +8,7 @@ from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from . import srs
+from . import grading, leetcode, srs
 from .models import Attempt, Problem, ReviewState
 
 
@@ -293,3 +293,132 @@ class AttemptGradeTests(APITestCase):
             resp = self.client.get(reverse('client-config'))
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         self.assertTrue(resp.data['ai_grading'])
+
+
+def _lc_response(content):
+    """Build a mock httpx response for the LeetCode GraphQL endpoint."""
+    resp = mock.Mock()
+    resp.raise_for_status = mock.Mock()
+    resp.json.return_value = {'data': {'question': {'content': content}}}
+    return resp
+
+
+class LeetcodeStatementTests(APITestCase):
+    """
+    Tests for fetching and caching problem statements from LeetCode.
+    """
+
+    def setUp(self):
+        self.problem = Problem.objects.create(
+            id='two-sum', name='Two Sum', lc_id='two-sum',
+            difficulty='easy', category='arrays-hashing')
+
+    def test_fetch_strips_html_to_text(self):
+        html_content = (
+            '<p>Given an array of integers <code>nums</code>&nbsp;and an '
+            'integer <code>target</code>.</p>\n'
+            '<pre><strong>Input:</strong> nums = [2,7]</pre>')
+        with mock.patch('problems.leetcode.httpx.post',
+                        return_value=_lc_response(html_content)):
+            statement = leetcode.fetch_statement('two-sum')
+
+        self.assertIn('Given an array of integers nums', statement)
+        self.assertIn('Input: nums = [2,7]', statement)
+        self.assertNotIn('<p>', statement)
+        self.assertNotIn('&nbsp;', statement)
+
+    def test_get_statement_caches_on_the_problem(self):
+        with mock.patch('problems.leetcode.httpx.post',
+                        return_value=_lc_response('<p>Statement.</p>')) as post:
+            first = leetcode.get_statement(self.problem)
+            second = leetcode.get_statement(self.problem)
+
+        self.assertEqual(first, 'Statement.')
+        self.assertEqual(second, 'Statement.')
+        post.assert_called_once()
+        self.problem.refresh_from_db()
+        self.assertEqual(self.problem.statement, 'Statement.')
+
+    def test_fetch_failure_returns_none_and_does_not_cache(self):
+        import httpx as httpx_module
+        with mock.patch('problems.leetcode.httpx.post',
+                        side_effect=httpx_module.ConnectError('down')):
+            statement = leetcode.get_statement(self.problem)
+
+        self.assertIsNone(statement)
+        self.problem.refresh_from_db()
+        self.assertEqual(self.problem.statement, '')
+
+    def test_paid_problem_with_null_content_returns_none(self):
+        with mock.patch('problems.leetcode.httpx.post',
+                        return_value=_lc_response(None)):
+            self.assertIsNone(leetcode.fetch_statement('paid-only'))
+
+    def test_statement_is_truncated(self):
+        with mock.patch('problems.leetcode.httpx.post',
+                        return_value=_lc_response('x' * 20000)):
+            statement = leetcode.fetch_statement('two-sum')
+        self.assertEqual(len(statement), leetcode.MAX_STATEMENT_CHARS)
+
+    def test_statement_excluded_from_problem_list_payload(self):
+        user = get_user_model().objects.create_user(
+            username='alice', email='a@example.com', password='pw')
+        self.problem.statement = 'huge text'
+        self.problem.save()
+        self.client.force_authenticate(user)
+
+        resp = self.client.get('/problems/')
+
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertNotIn('statement', resp.data[0])
+
+
+class GradingPromptTests(APITestCase):
+    """
+    Tests that the grading prompt includes the fetched statement.
+    """
+
+    def setUp(self):
+        self.problem = Problem.objects.create(
+            id='two-sum', name='Two Sum', lc_id='two-sum',
+            difficulty='easy', category='arrays-hashing')
+
+    def test_build_user_message_includes_statement(self):
+        message = grading.build_user_message(
+            self.problem, 'def f(): pass', notes='tricky',
+            statement='Given nums, return indices.')
+        self.assertIn('Problem statement:\nGiven nums, return indices.', message)
+        self.assertIn('def f(): pass', message)
+        self.assertIn('tricky', message)
+
+    def test_build_user_message_without_statement(self):
+        message = grading.build_user_message(self.problem, 'code')
+        self.assertNotIn('Problem statement:', message)
+
+    def test_grade_solution_feeds_statement_to_claude(self):
+        parsed = grading.GradeSuggestion(outcome='clean', feedback='Nice.')
+        fake_client = mock.Mock()
+        fake_client.messages.parse.return_value = mock.Mock(parsed_output=parsed)
+
+        with mock.patch('problems.grading.leetcode.get_statement',
+                        return_value='THE REAL STATEMENT'), \
+                mock.patch('anthropic.Anthropic', return_value=fake_client):
+            suggestion = grading.grade_solution(self.problem, 'def f(): pass')
+
+        self.assertEqual(suggestion.outcome, 'clean')
+        sent = fake_client.messages.parse.call_args.kwargs['messages'][0]['content']
+        self.assertIn('THE REAL STATEMENT', sent)
+
+    def test_grade_solution_survives_missing_statement(self):
+        parsed = grading.GradeSuggestion(outcome='partial', feedback='Hmm.')
+        fake_client = mock.Mock()
+        fake_client.messages.parse.return_value = mock.Mock(parsed_output=parsed)
+
+        with mock.patch('problems.grading.leetcode.get_statement',
+                        return_value=None), \
+                mock.patch('anthropic.Anthropic', return_value=fake_client):
+            suggestion = grading.grade_solution(self.problem, 'x')
+
+        self.assertEqual(suggestion.outcome, 'partial')
+        sent = fake_client.messages.parse.call_args.kwargs['messages'][0]['content']
+        self.assertNotIn('Problem statement:', sent)
