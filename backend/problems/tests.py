@@ -422,3 +422,114 @@ class GradingPromptTests(APITestCase):
         self.assertEqual(suggestion.outcome, 'partial')
         sent = fake_client.messages.parse.call_args.kwargs['messages'][0]['content']
         self.assertNotIn('Problem statement:', sent)
+
+
+class StatsTests(APITestCase):
+    """
+    Tests for the aggregate stats endpoint.
+    """
+
+    def setUp(self):
+        user_model = get_user_model()
+        self.user = user_model.objects.create_user(
+            username='alice', email='alice@example.com', password='pw')
+        self.easy = Problem.objects.create(
+            id='two-sum', name='Two Sum', lc_id='two-sum',
+            difficulty='easy', category='arrays-hashing')
+        self.medium = Problem.objects.create(
+            id='course-schedule', name='Course Schedule', lc_id='course-schedule',
+            difficulty='medium', category='graphs')
+        self.client.force_authenticate(self.user)
+
+    def _attempt(self, problem, score, duration=10, when=None):
+        attempt = Attempt.objects.create(
+            user=self.user, problem=problem, score=score,
+            duration=duration, num_attempts=1)
+        if when is not None:
+            Attempt.objects.filter(pk=attempt.pk).update(timestamp=when)
+        return attempt
+
+    def test_totals_count_solved_and_averages(self):
+        self._attempt(self.easy, 8, duration=12)
+        self._attempt(self.medium, 4, duration=30)  # below passing → not solved
+
+        resp = self.client.get(reverse('stats'))
+
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        totals = resp.data['totals']
+        self.assertEqual(totals['attempts'], 2)
+        self.assertEqual(totals['solved'], 1)
+        self.assertEqual(totals['catalog'], 2)
+        self.assertEqual(totals['avg_score'], 6.0)
+        self.assertEqual(totals['minutes'], 42)
+
+    def test_in_progress_attempts_are_excluded(self):
+        Attempt.objects.create(user=self.user, problem=self.easy)  # in progress
+
+        resp = self.client.get(reverse('stats'))
+
+        self.assertEqual(resp.data['totals']['attempts'], 0)
+
+    def test_solved_counts_a_problem_once(self):
+        self._attempt(self.easy, 7)
+        self._attempt(self.easy, 9)  # re-solve of the same problem
+
+        resp = self.client.get(reverse('stats'))
+
+        self.assertEqual(resp.data['totals']['attempts'], 2)
+        self.assertEqual(resp.data['totals']['solved'], 1)
+
+    def test_heatmap_spans_the_window_and_counts_today(self):
+        self._attempt(self.easy, 8)
+
+        resp = self.client.get(reverse('stats'))
+
+        heatmap = resp.data['heatmap']
+        self.assertEqual(len(heatmap), 12 * 7)
+        self.assertEqual(heatmap[-1]['date'], timezone.localdate().isoformat())
+        self.assertEqual(heatmap[-1]['count'], 1)
+
+    def test_streak_counts_consecutive_days(self):
+        now = timezone.now()
+        self._attempt(self.easy, 8, when=now)
+        self._attempt(self.medium, 8, when=now - timedelta(days=1))
+
+        resp = self.client.get(reverse('stats'))
+
+        self.assertEqual(resp.data['totals']['streak'], 2)
+
+    def test_streak_breaks_after_a_gap(self):
+        now = timezone.now()
+        self._attempt(self.easy, 8, when=now - timedelta(days=3))
+
+        resp = self.client.get(reverse('stats'))
+
+        self.assertEqual(resp.data['totals']['streak'], 0)
+
+    def test_categories_report_solved_over_total(self):
+        self._attempt(self.easy, 9)  # arrays-hashing solved
+
+        resp = self.client.get(reverse('stats'))
+
+        by_category = {c['category']: c for c in resp.data['categories']}
+        self.assertEqual(by_category['arrays-hashing']['solved'], 1)
+        self.assertEqual(by_category['arrays-hashing']['total'], 1)
+        self.assertEqual(by_category['graphs']['solved'], 0)
+        # Empty categories are omitted.
+        self.assertNotIn('tries', by_category)
+
+    def test_recent_is_newest_first(self):
+        now = timezone.now()
+        self._attempt(self.easy, 8, when=now - timedelta(hours=2))
+        self._attempt(self.medium, 5, when=now)
+
+        resp = self.client.get(reverse('stats'))
+
+        recent = resp.data['recent']
+        self.assertEqual(recent[0]['problem_id'], 'course-schedule')
+        self.assertEqual(recent[1]['problem_id'], 'two-sum')
+
+    def test_requires_authentication(self):
+        self.client.force_authenticate(None)
+        resp = self.client.get(reverse('stats'))
+        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)

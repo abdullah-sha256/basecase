@@ -63,6 +63,23 @@ const AttemptModal = {
   ATTEMPT_MODAL_AI_ERROR: "AI grading failed. Score it manually.",
 };
 
+const Stats = {
+  STATS_TITLE: "Your progress.",
+  STATS_LABEL: "// stats",
+  STATS_STAT_SOLVED: "solved",
+  STATS_STAT_ATTEMPTS: "attempts",
+  STATS_STAT_STREAK: "day streak",
+  STATS_STAT_AVG: "avg score",
+  STATS_STAT_TIME: "time spent",
+  STATS_ACTIVITY_HEADING: "// activity (last 12 weeks)",
+  STATS_COVERAGE_HEADING: "// coverage by pattern",
+  STATS_RECENT_HEADING: "// recent attempts",
+  STATS_RECENT_EMPTY:
+    "No attempts yet. Head to the problems list and log your first one.",
+  STATS_LESS: "less",
+  STATS_MORE: "more",
+};
+
 const TodayPlan = {
   TODAY_PLAN_TITLE: "$ basecase today",
   TODAY_PLAN_REVIEW_TAG: "(review due)",
@@ -112,6 +129,7 @@ export const messages = {
   ...LoginModal,
   ...AttemptConfirmation,
   ...AttemptModal,
+  ...Stats,
   ...TodayPlan,
   ...Problems,
   ...Patterns,
