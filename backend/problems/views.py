@@ -1,6 +1,6 @@
 import math
 from django.utils import timezone
-from . import grading, srs
+from . import grading, srs, stats
 from .models import Problem, Attempt, ReviewState
 from .serializers import (
     ProblemListSerializer,
@@ -187,3 +187,15 @@ class ClientConfig(views.APIView):
 
     def get(self, request):
         return response.Response({'ai_grading': grading.is_available()})
+
+
+class Stats(views.APIView):
+    """
+    API view returning aggregate practice statistics for the current
+    user: headline totals, a daily activity heatmap, per-category
+    coverage, and recent completed attempts.
+    """
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        return response.Response(stats.build_stats(request.user))

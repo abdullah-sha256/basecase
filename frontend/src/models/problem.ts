@@ -147,3 +147,33 @@ export interface ITodayPlan {
 export interface IClientConfig {
   ai_grading: boolean;
 }
+
+/**
+ * Aggregate practice statistics for the stats/history page.
+ */
+export interface IStats {
+  totals: {
+    attempts: number;
+    solved: number;
+    catalog: number;
+    avg_score: number;
+    minutes: number;
+    streak: number;
+  };
+  heatmap: { date: string; count: number }[];
+  categories: {
+    category: TProblemCategory;
+    label: string;
+    solved: number;
+    total: number;
+  }[];
+  recent: {
+    problem_id: string;
+    name: string;
+    difficulty: TProblemDifficulty;
+    score: number;
+    duration: number | null;
+    num_attempts: number | null;
+    timestamp: string;
+  }[];
+}

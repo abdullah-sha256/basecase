@@ -8,4 +8,5 @@ urlpatterns = [
     path('attempts/<int:pk>/grade/', views.AttemptGrade.as_view(), name='attempt-grade'),
     path('plan/today/', views.TodayPlan.as_view(), name='plan-today'),
     path('config/', views.ClientConfig.as_view(), name='client-config'),
+    path('stats/', views.Stats.as_view(), name='stats'),
 ]

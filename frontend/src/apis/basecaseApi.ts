@@ -7,6 +7,7 @@ import {
   ICompleteAttemptPayload,
   IGradeSuggestion,
   IProblem,
+  IStats,
   ITodayPlan,
 } from "../models/problem";
 
@@ -83,10 +84,16 @@ const Config = {
     requests.get<IClientConfig>("/config/", token),
 };
 
+const Stats = {
+  get: (token?: string): Promise<IStats> =>
+    requests.get<IStats>("/stats/", token),
+};
+
 const basecaseApi = {
   Account,
   Problem,
   Config,
+  Stats,
 };
 
 export default basecaseApi;
